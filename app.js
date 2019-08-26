@@ -11,7 +11,7 @@ var connection = mysql.createConnection({
 
 app.get('/getSpells', (req, res) => {
   if(req.method == "GET"){
-    connection.query("SELECT * from spells", (err, result, fields) => {
+    connection.query("SELECT * from spells", (err, result) => {
       if(err) throw err;
 
       res.set('Content-Type', 'application/json');
@@ -26,7 +26,7 @@ app.get('/getSpells', (req, res) => {
 
 app.get('/charGeneral/:sessionId/:charId', (req, res) => {
   if(req.method == "GET"){
-    connection.query("SELECT c.firstname, c.lastname, c.level, c.xp, a.name, c.background, c.age, c.height, weight FROM characters c INNER JOIN alignments a ON a.id = c.alignment WHERE c.charString='" + req.params.charId + "' AND c.userId = (SELECT id from users WHERE sessionId = '" + req.params.sessionId + "')", (err, result, fields) => {
+    connection.query("SELECT c.firstname, c.lastname, c.level, c.xp, a.name, c.background, c.age, c.height, weight FROM characters c INNER JOIN alignments a ON a.id = c.alignment WHERE c.charString='" + req.params.charId + "' AND c.userId = (SELECT id from users WHERE sessionId = '" + req.params.sessionId + "')", (err, result) => {
       if(err) throw err;  
 
       res.set('Content-Type', 'application/json');
@@ -46,7 +46,7 @@ app.get('/charGeneral/:sessionId/:charId', (req, res) => {
 
 app.get('/charMoney/:sessionId/:charId', (req, res) => {
   if(req.method == "GET"){
-    connection.query("SELECT copper, silver, electrum, gold, platinum from characters WHERE charString = '" + req.params.charId + "' AND userId = (SELECT id FROM users WHERE sessionId = '" + req.params.sessionId + "')", (err, result, fields) => {
+    connection.query("SELECT copper, silver, electrum, gold, platinum from characters WHERE charString = '" + req.params.charId + "' AND userId = (SELECT id FROM users WHERE sessionId = '" + req.params.sessionId + "')", (err, result) => {
       if(err) throw err;
 
       res.set('Content-Type', 'application/json');
@@ -66,7 +66,7 @@ app.get('/charMoney/:sessionId/:charId', (req, res) => {
 
 app.get('/charHealth/:sessionId/:charId', (req, res) => {
   if(req.method == "GET"){
-    connection.query("SELECT maxHealth, currentHealth, tempHealth from characters WHERE charString = '" + req.params.charId + "' AND userId = (SELECT id FROM users WHERE sessionId = '" + req.params.sessionId + "')", (err, result, fields) => {
+    connection.query("SELECT maxHealth, currentHealth, tempHealth from characters WHERE charString = '" + req.params.charId + "' AND userId = (SELECT id FROM users WHERE sessionId = '" + req.params.sessionId + "')", (err, result) => {
       if(err) throw err;
 
       res.set('Content-Type', 'application/json');
@@ -84,10 +84,19 @@ app.get('/charHealth/:sessionId/:charId', (req, res) => {
   
 });
 
+app.get('/charSpells/:sessionId/:charId', (req, res) => {
+  if(req.method == "GET"){
+    connection.query("SELECT s.* FROM charSpells c INNER JOIN spells s ON c.spellId = s.id WHERE c.characterId = (SELECT id from characters ch WHERE ch.charString = '" + req.params.charId + "' AND ch.userId = (SELECT id FROM users WHERE sessionId = '" + req.params.sessionId + "'))", (err, result) => {
+      if(err) throw error;
+
+      res.set('Content-Type', 'application/json');
+      res.send(JSON.stringify(result));
+    });
+  }
+});
 
 
 
-
-app.listen(3004, function(){
+app.listen(3004, () => {
   console.log('Listening port 3004');
 });
