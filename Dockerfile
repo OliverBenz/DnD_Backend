@@ -14,6 +14,8 @@ RUN npm install --save cors
 
 RUN npm install mysql
 
+RUN npm install bcryptjs
+
 COPY --chown=node:node . .
 
 EXPOSE 3004
