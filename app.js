@@ -1,7 +1,7 @@
 var express = require('express');
 var bodyParser = require('body-parser');
 var cors = require('cors');
-var bcrypt = require('bcrypt');
+var bcrypt = require('bcryptjs');
 
 var app = express();
 app.use(cors());
