@@ -12,10 +12,17 @@ app.use('/dnd', dndRouter);
 
 // MySQL Setup
 var mysql = require('mysql');
+// var connection = mysql.createConnection({
+//   host: 'localhost',
+//   user: 'root',
+//   password: '',
+//   database: 'dnd'
+// });
 var connection = mysql.createConnection({
-  host: 'localhost',
-  user: 'root',
-  password: '',
+  host: '172.17.0.1',
+  user: 'dnd',
+  password: 'B71x!#rOWv$WH3&!2ltu43Y*nW3@7J',
+  port: '3306',
   database: 'dnd'
 });
 
@@ -49,7 +56,7 @@ dndRouter.get('/charGeneral/:sessionId/:charId', checkUserCharacter, (req, res) 
 dndRouter.patch('/charGeneral/:sessionId/:charId', checkUserCharacter, (req, res) => {
   connection.query("UPDATE characters SET xp", (err, result) => {
     if(err) throw err;
-  
+
     // TODO: IMPLEMENT patch character XP and level(if XP at certain value)
   });
 });
