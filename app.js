@@ -63,7 +63,7 @@ dndRouter.patch('/charGeneral/:sessionId/:charId', checkUserCharacter, (req, res
 });
 
 dndRouter.get('/charList/:sessionId', (req, res) => {
-  connection.query("SELECT firstname, lastname, charString from characters WHERE userId = (SELECT id FROM users WHERE sessionId = '" + req.params.sessionId + "')", (err, result) => {
+  connection.query("SELECT firstname, lastname, level, charString from characters WHERE userId = (SELECT id FROM users WHERE sessionId = '" + req.params.sessionId + "')", (err, result) => {
     if(err) throw err;
 
     res.status(200);
