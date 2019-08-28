@@ -62,6 +62,16 @@ dndRouter.patch('/charGeneral/:sessionId/:charId', checkUserCharacter, (req, res
   });
 });
 
+dndRouter.get('/charList/:sessionId', (req, res) => {
+  connection.query("SELECT firstname, lastname, charString from characters WHERE userId = (SELECT id FROM users WHERE sessionId = '" + req.params.sessionId + "')", (err, result) => {
+    if(err) throw err;
+
+    res.status(200);
+    res.set('Content-Type', 'application/json');
+    res.send(JSON.stringify(result));
+  })
+});
+
 
 // -----------------------------------------
 //            Character Money
@@ -127,7 +137,7 @@ dndRouter.get('/charSpells/:sessionId/:charId', checkUserCharacter, (req, res) =
 
 
 // -----------------------------------------
-//            Character Spells
+//                  User
 // -----------------------------------------
 
 dndRouter.post('/userLogin', (req, res) => {
@@ -151,6 +161,10 @@ dndRouter.post('/userLogin', (req, res) => {
       }
     }
   });
+});
+
+dndRouter.get('/userRegister', (req, res) => {
+
 });
 
 
