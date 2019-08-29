@@ -74,15 +74,10 @@ dndRouter.get('/charList/:sessionId', (req, res) => {
       console.log(err);
     };
 
-    if(result.length === 0){
-      res.status(204);
-      res.send("No characters");
-    }
-
     res.status(200);
     res.set('Content-Type', 'application/json');
     res.send(JSON.stringify(result));
-  })
+  });
 });
 
 
