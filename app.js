@@ -163,8 +163,22 @@ dndRouter.post('/userLogin', (req, res) => {
   });
 });
 
-dndRouter.get('/userRegister', (req, res) => {
+dndRouter.post('/userRegister', (req, res) => {
+  let sessionId = bcrypt.hashSync(req.body.firstname + req.body.email, 12); 
 
+  connection.query("INSERT INTO users VALUES (0, '" + req.body.firstname + "', '" + req.body.lastname + "', '" + req.body.email + "', '" + bcrypt.hashSync(req.body.password, 12) + "', '" + sessionId + "')", (err, result) => {
+    if(err){
+      console.log(err.errno);
+      // Duplicate entry
+      if(err.errno == 1062){
+        res.status(409);
+        res.send("User already registered");
+      }
+    } 
+
+    res.status(200);
+    res.send("Insertion successful");
+  });
 });
 
 
