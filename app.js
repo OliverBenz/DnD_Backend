@@ -177,7 +177,7 @@ dndRouter.post('/userRegister', (req, res) => {
     } 
 
     res.status(200);
-    res.send("Insertion successful");
+    res.send(JSON.stringify(sessionId));
   });
 });
 
