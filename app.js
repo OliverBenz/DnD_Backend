@@ -66,6 +66,11 @@ dndRouter.get('/charList/:sessionId', (req, res) => {
   connection.query("SELECT firstname, lastname, level, charString from characters WHERE userId = (SELECT id FROM users WHERE sessionId = '" + req.params.sessionId + "')", (err, result) => {
     if(err) throw err;
 
+    if(result.length === 0){
+      res.status(204);
+      res.send("No characters");
+    }
+
     res.status(200);
     res.set('Content-Type', 'application/json');
     res.send(JSON.stringify(result));
