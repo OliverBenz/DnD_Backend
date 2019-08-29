@@ -169,7 +169,7 @@ dndRouter.post('/userLogin', (req, res) => {
 });
 
 dndRouter.post('/userRegister', (req, res) => {
-  let sessionId = bcrypt.hashSync(req.body.firstname + req.body.email, 12); 
+  let sessionId = bcrypt.hashSync(req.body.firstname + req.body.email, 12).split("/").join("");
 
   connection.query("INSERT INTO users VALUES (0, '" + req.body.firstname + "', '" + req.body.lastname + "', '" + req.body.email + "', '" + bcrypt.hashSync(req.body.password, 12) + "', '" + sessionId + "')", (err, result) => {
     if(err){
