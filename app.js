@@ -42,6 +42,19 @@ dndRouter.get('/getSpells', (req, res) => {
   });
 });
 
+// Get Alignments
+dndRouter.get('/alignments', (req, res) => {
+  connection.query("SELECT id, name FROM alignments", (err, result) =>{
+    if(err){
+      console.log(err);
+    }
+
+    res.status(200);
+    res.set('Content-Type', 'application/json');
+    res.send(JSON.stringify(result));
+  });
+});
+
 // -----------------------------------------
 //            Character General
 // -----------------------------------------
@@ -65,18 +78,6 @@ dndRouter.patch('/charGeneral/:sessionId/:charId', checkUserCharacter, (req, res
     }
 
     // TODO: IMPLEMENT patch character XP and level(if XP at certain value)
-  });
-});
-
-dndRouter.get('/charList/:sessionId', (req, res) => {
-  connection.query("SELECT firstname, lastname, level, charString from characters WHERE userId = (SELECT id FROM users WHERE sessionId = '" + req.params.sessionId + "')", (err, result) => {
-    if(err){
-      console.log(err);
-    };
-
-    res.status(200);
-    res.set('Content-Type', 'application/json');
-    res.send(JSON.stringify(result));
   });
 });
 
@@ -158,6 +159,18 @@ dndRouter.get('/charSpells/:sessionId/:charId', checkUserCharacter, (req, res) =
 //                  User
 // -----------------------------------------
 
+dndRouter.get('/charList/:sessionId', (req, res) => {
+  connection.query("SELECT firstname, lastname, level, charString from characters WHERE userId = (SELECT id FROM users WHERE sessionId = '" + req.params.sessionId + "')", (err, result) => {
+    if(err){
+      console.log(err);
+    };
+
+    res.status(200);
+    res.set('Content-Type', 'application/json');
+    res.send(JSON.stringify(result));
+  });
+});
+
 dndRouter.post('/userLogin', (req, res) => {
   connection.query("SELECT password FROM users WHERE email='" + req.body.email + "'", (err, result) => {
     if(err){
@@ -200,6 +213,41 @@ dndRouter.post('/userRegister', (req, res) => {
     res.send(JSON.stringify(sessionId));
   });
 });
+
+// TODO: Test if works
+dndRouter.post('userChar/:sessionId', (req, res) => {
+  let charString = bcrypt.hashSync(String(Math.random()) , 12).substring(5, 20);
+
+  console.log(charString);
+
+  var sql = "INSERT IN TO characters VALUES (0, " + charString + ", ";
+  
+  sql += "(SELECT id FROM users WHERE sessionId = '" + req.params.sessionId + "'), ";
+  
+  sql += req.body.firstname + ", " + req.body.lastname + ", " + req.body.level + ", " + req.body.xp + ", ";
+  sql += req.body.alignment + ", " + req.body.background + ", " + req.body.age + ", " + req.body.height + ", " + req.body.weight + ", ";
+  sql += req.body.maxHealth + ", " + req.body.tempHealth + ", " + req.body.currentHealth + ", ";
+  sql += req.body.copper + ", " + req.body.silver + ", " + req.body.electrum + ", " + req.body.gold + ", " + req.body.gold + ", " + req.body.platinum + ")";
+
+  this.insertNewChar(sql, charString);
+});
+
+function insertNewChar(sql, charString){
+  connection.query(sql, (err, result) => {
+    if(err){
+      if(err.errno === 1062){
+        this.insertNewChar(sql);
+      }
+      else{
+        res.status(409);
+        res.send("Char already registered");
+      }
+    }
+
+    res.status(200);
+    res.send(charString);
+  });
+}
 
 
 // Testing function
