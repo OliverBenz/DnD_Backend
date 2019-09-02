@@ -214,7 +214,7 @@ dndRouter.post('/userRegister', (req, res) => {
   });
 });
 
-// TODO: Test if works
+// Create new Character
 dndRouter.post('/userChar/:sessionId', (req, res) => {
   let charString = bcrypt.hashSync(String(Math.random()) , 12).substring(5, 20);
 
@@ -242,6 +242,21 @@ dndRouter.post('/userChar/:sessionId', (req, res) => {
     res.status(200);
     res.set('Content-Type', 'application/json');
     res.send(JSON.stringify({"charString": charString}));
+  });
+});
+
+// Delete Character
+dndRouter.delete('/userChar/:sessionId', (req, res) => {
+  connection.query('DELETE FROM characters WHERE charString = "' + req.body.charString + '" AND userId = (SELECT id FROM users WHERE sessionId = "' + req.params.sessionId + '")', (err, result) => {
+    if(err){
+      console.log(err);
+      res.status(500);
+      res.send("Could not delete Character");
+    }
+
+    res.status(200);
+    res.set('Content-Type', 'application/json');
+    res.send("Deletion successful");
   });
 });
 
