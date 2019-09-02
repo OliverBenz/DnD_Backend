@@ -240,7 +240,8 @@ dndRouter.post('/userChar/:sessionId', (req, res) => {
     }
 
     res.status(200);
-    res.send(charString);
+    res.set('Content-Type', 'application/json');
+    res.send(JSON.stringify({"charString": charString}));
   });
 });
 
