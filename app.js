@@ -233,13 +233,10 @@ dndRouter.post('userChar/:sessionId', (req, res) => {
 });
 
 function insertNewChar(sql, charString){
-  let counter = 0;
-
   connection.query(sql, (err, result) => {
     if(err){
-      if(err.errno === 1062 && counter < 5){
+      if(err.errno === 1062){
         this.insertNewChar(sql);
-        couter += 1;
       }
       else{
         res.status(409);
