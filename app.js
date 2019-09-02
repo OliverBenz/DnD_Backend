@@ -13,19 +13,19 @@ app.use('/dnd', dndRouter);
 
 // MySQL Setup
 var mysql = require('mysql');
-// var connection = mysql.createConnection({
-//   host: 'localhost',
-//   user: 'root',
-//   password: '',
-//   database: 'dnd'
-// });
 var connection = mysql.createConnection({
-  host: '172.17.0.1',
-  user: 'dnd',
-  password: 'B71x!#rOWv$WH3&!2ltu43Y*nW3@7J',
-  port: '3306',
+  host: 'localhost',
+  user: 'root',
+  password: '',
   database: 'dnd'
 });
+// var connection = mysql.createConnection({
+//   host: '172.17.0.1',
+//   user: 'dnd',
+//   password: 'B71x!#rOWv$WH3&!2ltu43Y*nW3@7J',
+//   port: '3306',
+//   database: 'dnd'
+// });
 
 
 
@@ -215,30 +215,25 @@ dndRouter.post('/userRegister', (req, res) => {
 });
 
 // TODO: Test if works
-dndRouter.post('userChar/:sessionId', (req, res) => {
+dndRouter.post('/userChar/:sessionId', (req, res) => {
   let charString = bcrypt.hashSync(String(Math.random()) , 12).substring(5, 20);
 
-  console.log(charString);
-
-  var sql = "INSERT IN TO characters VALUES (0, " + charString + ", ";
+  var sql = "INSERT INTO characters VALUES (0, '" + charString + "', ";
   
   sql += "(SELECT id FROM users WHERE sessionId = '" + req.params.sessionId + "'), ";
   
-  sql += req.body.firstname + ", " + req.body.lastname + ", " + req.body.level + ", " + req.body.xp + ", ";
-  sql += req.body.alignment + ", " + req.body.background + ", " + req.body.age + ", " + req.body.height + ", " + req.body.weight + ", ";
+  sql += "'" + req.body.firstname + "', '" + req.body.lastname + "', " + req.body.level + ", " + req.body.xp + ", ";
+  sql += req.body.alignment + ", '" + req.body.background + "', " + req.body.age + ", " + req.body.height + ", " + req.body.weight + ", ";
   sql += req.body.maxHealth + ", " + req.body.tempHealth + ", " + req.body.currentHealth + ", ";
-  sql += req.body.copper + ", " + req.body.silver + ", " + req.body.electrum + ", " + req.body.gold + ", " + req.body.gold + ", " + req.body.platinum + ")";
+  sql += req.body.copper + ", " + req.body.silver + ", " + req.body.electrum + ", " + req.body.gold + ", " + req.body.platinum + ")";
 
-  this.insertNewChar(sql, charString);
-});
-
-function insertNewChar(sql, charString){
   connection.query(sql, (err, result) => {
     if(err){
       if(err.errno === 1062){
-        this.insertNewChar(sql);
+        // this.insertNewChar(sql);
       }
       else{
+        console.log(err);
         res.status(409);
         res.send("Char already registered");
       }
@@ -247,7 +242,7 @@ function insertNewChar(sql, charString){
     res.status(200);
     res.send(charString);
   });
-}
+});
 
 
 // Testing function
