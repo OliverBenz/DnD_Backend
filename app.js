@@ -28,6 +28,9 @@ var connection = mysql.createConnection({
 });
 
 
+// -----------------------------------------
+//                 General
+// -----------------------------------------
 
 // Get Spells
 dndRouter.get('/getSpells', (req, res) => {
@@ -47,6 +50,22 @@ dndRouter.get('/alignments', (req, res) => {
   connection.query("SELECT id, name FROM alignments", (err, result) =>{
     if(err){
       console.log(err);
+    }
+
+    res.status(200);
+    res.set('Content-Type', 'application/json');
+    res.send(JSON.stringify(result));
+  });
+});
+
+// Get Backgrounds
+dndRouter.get('/backgrounds', (req, res) => {
+  connection.query("SELECT id, name FROM backgrounds", (err, result) => {
+    if(err){
+      console.log(err);
+      res.status(500);
+      res.set('Content-Type', 'application/json');
+      res.send(JSON.stringify({"message": "Could not get Backgrounds"}));
     }
 
     res.status(200);
@@ -237,10 +256,11 @@ dndRouter.post('/userChar/:sessionId', (req, res) => {
   connection.query(sql, (err, result) => {
     if(err){
       if(err.errno === 1062){
-        // this.insertNewChar(sql);
+        // res.status()
       }
       else{
         console.log(err);
+
         res.status(409);
         res.set('Content-Type', 'application/json');
         res.send(JSON.stringify({"message": "Char already registered"}));
