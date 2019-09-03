@@ -175,6 +175,25 @@ dndRouter.get('/charSpells/:sessionId/:charId', checkUserCharacter, (req, res) =
   });
 });
 
+dndRouter.get('/checkCharSpell/:sessionId/:charString/:spellId', checkUserCharacter, (req, res) => {
+  connection.query("SELECT * FROM charSpells WHERE charId = (SELECT id FROM characters WHERE charString = '" + req.params.charString + "') AND spellId = " + req.params.spellId, (err, result) => {
+    if(err){
+      console.log(err); 
+    }
+    
+    if(result.length === 1){
+      res.status(200);
+      res.set('Content-Type', 'application/json');
+      res.send(JSON.stringify({ "result": true }));
+    }
+    else{
+      res.status(200);
+      res.set('Content-Type', 'application/json');
+      res.send(JSON.stringify({ "result": false }));
+    }
+  });
+});
+
 
 // -----------------------------------------
 //                  User
