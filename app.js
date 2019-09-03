@@ -105,7 +105,8 @@ dndRouter.patch('/charMoney/:sessionId/:charId', checkUserCharacter, (req, res) 
     }
 
     res.status(200);
-    res.send("Update successful");
+    res.set('Content-Type', 'application/json');
+    res.send(JSON.stringify({"message": "Update successful"}));
   });  
 });
 
@@ -133,7 +134,8 @@ dndRouter.patch('/charHealth/:sessionId/:charId', checkUserCharacter, (req, res)
     }
 
     res.status(200);
-    res.send("Update successful");
+    res.set('Content-Type', 'application/json');
+    res.send(JSON.stringify({"message": "Update successful"}));
   });
 });
 
@@ -179,18 +181,21 @@ dndRouter.post('/userLogin', (req, res) => {
 
     if(result.length === 0){
       res.status(401);
-      res.send("Wrong E-Mail");
+      res.set('Content-Type', 'application/json');
+      res.send(JSON.stringify({"message": "Invalid E-Mail"}));
     }
     else{
       if(bcrypt.compareSync(req.body.password, result[0]["password"])){
         connection.query("SELECT sessionId FROM users WHERE email='" + req.body.email + "'", (err, result) => {
           res.status(200);
+          res.set('Content-Type', 'application/json');
           res.send(JSON.stringify(result[0]));
         });
       }
       else{
         res.status(401);
-        res.send("Wrong password")
+        res.set('Content-Type', 'application/json');
+        res.send(JSON.stringify({"message": "Invalid password"}));
       }
     }
   });
@@ -205,11 +210,13 @@ dndRouter.post('/userRegister', (req, res) => {
       // Duplicate entry
       if(err.errno == 1062){
         res.status(409);
-        res.send("User already registered");
+        res.set('Content-Type', 'application/json');
+        res.send(JSON.stringify({"message": "User already registered"}));
       }
     } 
 
     res.status(200);
+    res.set('Content-Type', 'application/json');
     res.send(JSON.stringify(sessionId));
   });
 });
@@ -235,7 +242,8 @@ dndRouter.post('/userChar/:sessionId', (req, res) => {
       else{
         console.log(err);
         res.status(409);
-        res.send("Char already registered");
+        res.set('Content-Type', 'application/json');
+        res.send(JSON.stringify({"message": "Char already registered"}));
       }
     }
 
@@ -247,17 +255,43 @@ dndRouter.post('/userChar/:sessionId', (req, res) => {
 
 // Delete Character
 dndRouter.delete('/userChar/:sessionId', (req, res) => {
-  connection.query('DELETE FROM characters WHERE charString = "' + req.body.charString + '" AND userId = (SELECT id FROM users WHERE sessionId = "' + req.params.sessionId + '")', (err, result) => {
+  // Check password
+    connection.query("SELECT password FROM users WHERE sessionId='" + req.params.sessionId + "'", (err, result) => {
     if(err){
       console.log(err);
-      res.status(500);
-      res.send("Could not delete Character");
-    }
+    };
 
-    res.status(200);
-    res.set('Content-Type', 'application/json');
-    res.send("Deletion successful");
+    if(result.length === 0){
+      res.status(401);
+      res.set('Content-Type', 'application/json');
+      res.send(JSON.stringify({"message": "Invalid SessionId"}));
+    }
+    else{
+      // If password correct
+      if(bcrypt.compareSync(req.body.password, result[0]["password"])){
+        connection.query('DELETE FROM characters WHERE charString = "' + req.body.charString + '" AND userId = (SELECT id FROM users WHERE sessionId = "' + req.params.sessionId + '")', (err, result) => {
+          if(err){
+            console.log(err);
+            res.status(500);
+            res.set('Content-Type', 'application/json');
+            res.send(JSON.stringify("message": "Could not delete Character"));
+          }
+
+          res.status(200);
+          res.set('Content-Type', 'application/json');
+          res.send(JSON.stringify({"result": true, "message": "Deletion successful"}));
+        });        
+      }
+      else{
+        res.status(401);
+        res.set('Content-Type', 'application/json');
+        res.send(JSON.stringify({"message": "Invalid password"}));
+      }
+    }
   });
+
+
+
 });
 
 
@@ -271,7 +305,8 @@ function checkUserCharacter(req, res, next){
 
     if(result.length === 0){
       res.status(401);
-      res.send("Wrong CharacterId / SessionId");
+      res.set('Content-Type', 'application/json');
+      res.send(JSON.stringify({"message": "Wrong CharacterId / SessionId"}));
     }
     else{
       next();
