@@ -274,7 +274,7 @@ dndRouter.delete('/userChar/:sessionId', (req, res) => {
             console.log(err);
             res.status(500);
             res.set('Content-Type', 'application/json');
-            res.send(JSON.stringify("message": "Could not delete Character"));
+            res.send(JSON.stringify({"message": "Could not delete Character"}));
           }
 
           res.status(200);
