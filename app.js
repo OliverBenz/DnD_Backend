@@ -164,7 +164,7 @@ dndRouter.patch('/charHealth/:sessionId/:charString', checkUserCharacter, (req, 
 // -----------------------------------------
 
 dndRouter.get('/checkCharSpell/:sessionId/:charString/:spellId', checkUserCharacter, (req, res) => {
-  connection.query("SELECT * FROM charSpells WHERE charId = (SELECT id FROM characters WHERE charString = '" + req.params.charString + "') AND spellId = " + req.params.spellId, (err, result) => {
+  connection.query("SELECT * FROM charSpells WHERE characterId = (SELECT id FROM characters WHERE charString = '" + req.params.charString + "') AND spellId = " + req.params.spellId, (err, result) => {
     if(err){
       console.log(err); 
     }
