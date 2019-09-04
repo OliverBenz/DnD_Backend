@@ -78,8 +78,8 @@ dndRouter.get('/backgrounds', (req, res) => {
 //            Character General
 // -----------------------------------------
 
-dndRouter.get('/charGeneral/:sessionId/:charId', checkUserCharacter, (req, res) => {
-  connection.query("SELECT c.firstname, c.lastname, c.level, c.xp, a.name, c.background, c.age, c.height, weight FROM characters c INNER JOIN alignments a ON a.id = c.alignment WHERE c.charString='" + req.params.charId + "' AND c.userId = (SELECT id from users WHERE sessionId = '" + req.params.sessionId + "')", (err, result) => {
+dndRouter.get('/charGeneral/:sessionId/:charString', checkUserCharacter, (req, res) => {
+  connection.query("SELECT c.firstname, c.lastname, c.level, c.xp, a.name, c.background, c.age, c.height, weight FROM characters c INNER JOIN alignments a ON a.id = c.alignment WHERE c.charString='" + req.params.charString + "' AND c.userId = (SELECT id from users WHERE sessionId = '" + req.params.sessionId + "')", (err, result) => {
     if(err){
       console.log(err);
     }
@@ -90,7 +90,7 @@ dndRouter.get('/charGeneral/:sessionId/:charId', checkUserCharacter, (req, res) 
   });
 });
 
-dndRouter.patch('/charGeneral/:sessionId/:charId', checkUserCharacter, (req, res) => {
+dndRouter.patch('/charGeneral/:sessionId/:charString', checkUserCharacter, (req, res) => {
   connection.query("UPDATE characters SET xp", (err, result) => {
     if(err){
       console.log(err);
@@ -105,8 +105,8 @@ dndRouter.patch('/charGeneral/:sessionId/:charId', checkUserCharacter, (req, res
 //            Character Money
 // -----------------------------------------
 
-dndRouter.get('/charMoney/:sessionId/:charId', checkUserCharacter, (req, res) => {
-  connection.query("SELECT copper, silver, electrum, gold, platinum from characters WHERE charString = '" + req.params.charId + "' AND userId = (SELECT id FROM users WHERE sessionId = '" + req.params.sessionId + "')", (err, result) => {
+dndRouter.get('/charMoney/:sessionId/:charString', checkUserCharacter, (req, res) => {
+  connection.query("SELECT copper, silver, electrum, gold, platinum from characters WHERE charString = '" + req.params.charString + "' AND userId = (SELECT id FROM users WHERE sessionId = '" + req.params.sessionId + "')", (err, result) => {
     if(err){
       console.log(err);
     }
@@ -117,8 +117,8 @@ dndRouter.get('/charMoney/:sessionId/:charId', checkUserCharacter, (req, res) =>
   });  
 });
 
-dndRouter.patch('/charMoney/:sessionId/:charId', checkUserCharacter, (req, res) => {
-  connection.query("UPDATE characters SET copper = " + req.body.copper + ", silver = " + req.body.silver + ", electrum = " + req.body.electrum + ", gold = " + req.body.gold + ", platinum = " + req.body.platinum + " WHERE charString = '" + req.params.charId + "'", (err, result) => {
+dndRouter.patch('/charMoney/:sessionId/:charString', checkUserCharacter, (req, res) => {
+  connection.query("UPDATE characters SET copper = " + req.body.copper + ", silver = " + req.body.silver + ", electrum = " + req.body.electrum + ", gold = " + req.body.gold + ", platinum = " + req.body.platinum + " WHERE charString = '" + req.params.charString + "'", (err, result) => {
     if(err){
       console.log(err);
     }
@@ -134,8 +134,8 @@ dndRouter.patch('/charMoney/:sessionId/:charId', checkUserCharacter, (req, res) 
 //            Character Health
 // -----------------------------------------
 
-dndRouter.get('/charHealth/:sessionId/:charId', checkUserCharacter, (req, res) => {
-  connection.query("SELECT maxHealth, currentHealth, tempHealth from characters WHERE charString = '" + req.params.charId + "' AND userId = (SELECT id FROM users WHERE sessionId = '" + req.params.sessionId + "')", (err, result) => {
+dndRouter.get('/charHealth/:sessionId/:charString', checkUserCharacter, (req, res) => {
+  connection.query("SELECT maxHealth, currentHealth, tempHealth from characters WHERE charString = '" + req.params.charString + "' AND userId = (SELECT id FROM users WHERE sessionId = '" + req.params.sessionId + "')", (err, result) => {
     if(err){
       console.log(err);
     }
@@ -146,8 +146,8 @@ dndRouter.get('/charHealth/:sessionId/:charId', checkUserCharacter, (req, res) =
   });
 });
 
-dndRouter.patch('/charHealth/:sessionId/:charId', checkUserCharacter, (req, res) => {
-  connection.query("UPDATE characters SET maxHealth = " + req.body.maxHealth + ", currentHealth = " + req.body.currentHealth + ", tempHealth = " + req.body.tempHealth + " WHERE charString = '" + req.params.charId + "'", (err, result) => {
+dndRouter.patch('/charHealth/:sessionId/:charString', checkUserCharacter, (req, res) => {
+  connection.query("UPDATE characters SET maxHealth = " + req.body.maxHealth + ", currentHealth = " + req.body.currentHealth + ", tempHealth = " + req.body.tempHealth + " WHERE charString = '" + req.params.charString + "'", (err, result) => {
     if(err){
       console.log(err);
     }
@@ -162,18 +162,6 @@ dndRouter.patch('/charHealth/:sessionId/:charId', checkUserCharacter, (req, res)
 // -----------------------------------------
 //            Character Spells
 // -----------------------------------------
-
-dndRouter.get('/charSpells/:sessionId/:charId', checkUserCharacter, (req, res) => {
-  connection.query("SELECT s.* FROM charSpells c INNER JOIN spells s ON c.spellId = s.id WHERE c.characterId = (SELECT id from characters ch WHERE ch.charString = '" + req.params.charId + "' AND ch.userId = (SELECT id FROM users WHERE sessionId = '" + req.params.sessionId + "'))", (err, result) => {
-    if(err){
-      console.log(err);
-    };
-
-    res.status(200);
-    res.set('Content-Type', 'application/json');
-    res.send(JSON.stringify(result));
-  });
-});
 
 dndRouter.get('/checkCharSpell/:sessionId/:charString/:spellId', checkUserCharacter, (req, res) => {
   connection.query("SELECT * FROM charSpells WHERE charId = (SELECT id FROM characters WHERE charString = '" + req.params.charString + "') AND spellId = " + req.params.spellId, (err, result) => {
@@ -191,6 +179,38 @@ dndRouter.get('/checkCharSpell/:sessionId/:charString/:spellId', checkUserCharac
       res.set('Content-Type', 'application/json');
       res.send(JSON.stringify({ "result": false }));
     }
+  });
+});
+
+dndRouter.get('/charSpells/:sessionId/:charString', checkUserCharacter, (req, res) => {
+  connection.query("SELECT s.* FROM charSpells c INNER JOIN spells s ON c.spellId = s.id WHERE c.characterId = (SELECT id from characters ch WHERE ch.charString = '" + req.params.charString + "' AND ch.userId = (SELECT id FROM users WHERE sessionId = '" + req.params.sessionId + "'))", (err, result) => {
+    if(err){
+      console.log(err);
+    };
+
+    res.status(200);
+    res.set('Content-Type', 'application/json');
+    res.send(JSON.stringify(result));
+  });
+});
+
+dndRouter.post('/charSpells/:sessionId/:charString', checkUserCharacter, (req, res) => {
+  connection.query("INSERT INTO charSpells VALUES ((SELECT id FROM characters WHERE charString = '" + req.params.charString + "'), " + req.body.spellId + ")", (err, result) => {
+    if(err) console.log(err);
+
+    res.status(200);
+    res.set('Content-Type', 'application/json');
+    res.send(JSON.stringify({ "message": "Successfully Added Spell", "result": true }));
+  });
+});
+
+dndRouter.delete('/charSpells/:sessionId/:charString', checkUserCharacter, (req, res) => {
+  connection.query("DELETE FROM charSpells WHERE characterId = (SELECT id FROM characters WHERE charString = '" + req.params.charString + "') AND spellId = " + req.body.spellId, (err, result) => {
+    if(err) console.log(err);
+
+    res.status(200);
+    res.set('Content-Type', 'application/json');
+    res.send(JSON.stringify({ "message": "Successfully Removed Spell", "result": true }));
   });
 });
 
@@ -337,7 +357,7 @@ dndRouter.delete('/userChar/:sessionId', (req, res) => {
 // Testing function
 function checkUserCharacter(req, res, next){
   // Check if user/char exist and are connected
-  connection.query("SELECT id FROM characters WHERE charString='" + req.params.charId + "' AND userId = (SELECT id FROM users WHERE sessionId='" + req.params.sessionId + "')", (err, result) => {
+  connection.query("SELECT id FROM characters WHERE charString='" + req.params.charString + "' AND userId = (SELECT id FROM users WHERE sessionId='" + req.params.sessionId + "')", (err, result) => {
     if(err){
       console.log(err);
     };
