@@ -220,7 +220,7 @@ dndRouter.delete('/charSpells/:sessionId/:charString', checkUserCharacter, (req,
 // -----------------------------------------
 
 dndRouter.get('/notes/:sessionId/:charString', checkUserCharacter, (req, res) => {
-  connection.query("SELECT id, date, name FROM notes WHERE charString = '" + res.params.charString + "'", (err, result) => {
+  connection.query("SELECT id, date, name FROM notes WHERE charId = (SELECT id FROM characters WHERE charString = '" + req.params.charString + "')", (err, result) => {
     if(err){
       console.log(err);
 
@@ -235,6 +235,21 @@ dndRouter.get('/notes/:sessionId/:charString', checkUserCharacter, (req, res) =>
   });
 });
 
+dndRouter.post('/notes/:sessionId/:charString', checkUserCharacter, (req, res) => {
+  connection.query("INSERT INTO notes VALUES (0, (SELECT id characters WHERE charString = '" + req.params.charString + "'), '" + req.body.date + "', '" + req.body.note + "')", (err, result) => {
+    if(err){
+      console.log(err);
+
+      res.status(500);
+      res.set('Content-Type', 'application/json');
+      res.send(JSON.stringify({ "message": "Could not add note" }));
+    }
+
+    res.status(200);
+    res.set('Content-Type', 'application/json');
+    res.send(JSON.stringify({ "message": "Successfullly added note", "result": true }));
+  });
+});
 
 // -----------------------------------------
 //                  User
