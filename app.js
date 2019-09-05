@@ -266,7 +266,23 @@ dndRouter.patch('/charNotes/:sessionId/:charString', checkUserCharacter, (req, r
     
     res.status(200);
     res.set('Content-Type', 'application/json');
-    res.send(JSON.stringify({ "message": "Successfully updated  Note", "result": true }));
+    res.send(JSON.stringify({ "message": "Successfully updated Note", "result": true }));
+  });
+});
+
+dndRouter.delete('/charNotes/:sessionId/:charString', checkUserCharacter, (req, res) => {
+  connection.query("DELETE FROM notes WHERE id = " + req.body.id, (err, result) => {
+    if(err){
+      console.log(err);
+
+      res.status(500);
+      res.set('Content-Type', 'application/json');
+      res.send(JSON.stringify({ "message": "Could not delete Note", "result": false }));
+    }
+
+    res.status(200);
+    res.set('Content-Type', 'application/json');
+    res.send(JSON.stringify({ "message": "Successfully deleted Note", "result": true }));
   });
 });
 
