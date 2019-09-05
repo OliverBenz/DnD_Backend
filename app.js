@@ -223,7 +223,7 @@ dndRouter.delete('/charSpells/:sessionId/:charString', checkUserCharacter, (req,
 // -----------------------------------------
 
 dndRouter.get('/charNotes/:sessionId/:charString', checkUserCharacter, (req, res) => {
-  connection.query("SELECT id, date, note FROM notes WHERE charId = (SELECT id FROM characters WHERE charString = '" + req.params.charString + "') ORDERED BY date DESC", (err, result) => {
+  connection.query("SELECT id, date, note FROM notes WHERE charId = (SELECT id FROM characters WHERE charString = '" + req.params.charString + "') ORDER BY date DESC", (err, result) => {
     if(err){
       console.log(err);
 
