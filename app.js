@@ -254,6 +254,22 @@ dndRouter.post('/charNotes/:sessionId/:charString', checkUserCharacter, (req, re
   });
 });
 
+dndRouter.patch('/charNotes/:sessionId/:charString', checkUserCharacter, (req, res) => {
+  connection.query("UPDATE notes SET note='" + req.body.note + "' WHERE id = " + req.body.id, (err, result) => {
+    if(err){
+      console.log(err);
+
+      res.status(500);
+      res.set('Content-Type', 'application/json');
+      res.send(JSON.stringify({ "message": "Could not update Note", "result": false }));
+    }
+    
+    res.status(200);
+    res.set('Content-Type', 'application/json');
+    res.send(JSON.stringify({ "message": "Successfully updated  Note", "result": true }));
+  });
+});
+
 // -----------------------------------------
 //                  User
 // -----------------------------------------
