@@ -13,19 +13,19 @@ app.use('/dnd', dndRouter);
 
 // MySQL Setup
 var mysql = require('mysql');
-var connection = mysql.createConnection({
-  host: 'localhost',
-  user: 'root',
-  password: '',
-  database: 'dnd'
-});
 // var connection = mysql.createConnection({
-//   host: '172.17.0.1',
-//   user: 'dnd',
-//   password: 'B71x!#rOWv$WH3&!2ltu43Y*nW3@7J',
-//   port: '3306',
+//   host: 'localhost',
+//   user: 'root',
+//   password: '',
 //   database: 'dnd'
 // });
+var connection = mysql.createConnection({
+  host: '172.17.0.1',
+  user: 'dnd',
+  password: 'B71x!#rOWv$WH3&!2ltu43Y*nW3@7J',
+  port: '3306',
+  database: 'dnd'
+});
 
 // -----------------------------------------
 //                 General
@@ -462,7 +462,7 @@ dndRouter.delete('/userChar/:sessionId', (req, res) => {
       }
     }
   });
-  
+
   connection.end();
 });
 
