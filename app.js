@@ -222,8 +222,8 @@ dndRouter.delete('/charSpells/:sessionId/:charString', checkUserCharacter, (req,
 //            Character Notes
 // -----------------------------------------
 
-dndRouter.get('/notes/:sessionId/:charString', checkUserCharacter, (req, res) => {
-  connection.query("SELECT id, date, name FROM notes WHERE charId = (SELECT id FROM characters WHERE charString = '" + req.params.charString + "')", (err, result) => {
+dndRouter.get('/charNotes/:sessionId/:charString', checkUserCharacter, (req, res) => {
+  connection.query("SELECT id, date, note FROM notes WHERE charId = (SELECT id FROM characters WHERE charString = '" + req.params.charString + "') ORDERED BY date DESC", (err, result) => {
     if(err){
       console.log(err);
 
@@ -238,8 +238,8 @@ dndRouter.get('/notes/:sessionId/:charString', checkUserCharacter, (req, res) =>
   });
 });
 
-dndRouter.post('/notes/:sessionId/:charString', checkUserCharacter, (req, res) => {
-  connection.query("INSERT INTO notes VALUES (0, (SELECT id characters WHERE charString = '" + req.params.charString + "'), '" + req.body.date + "', '" + req.body.note + "')", (err, result) => {
+dndRouter.post('/charNotes/:sessionId/:charString', checkUserCharacter, (req, res) => {
+  connection.query("INSERT INTO notes VALUES (0, (SELECT id FROM characters WHERE charString = '" + req.params.charString + "'), '" + req.body.date + "', '" + req.body.note + "')", (err, result) => {
     if(err){
       console.log(err);
 
@@ -250,7 +250,7 @@ dndRouter.post('/notes/:sessionId/:charString', checkUserCharacter, (req, res) =
 
     res.status(200);
     res.set('Content-Type', 'application/json');
-    res.send(JSON.stringify({ "message": "Successfullly added note", "result": true }));
+    res.send(JSON.stringify({ "id": result.insertId, "date:" this.body.date, "note": this.body.note  }));
   });
 });
 
