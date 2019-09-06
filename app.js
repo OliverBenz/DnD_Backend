@@ -33,7 +33,7 @@ var connection = mysql.createConnection({
 
 // Get Spells
 dndRouter.get('/getSpells', (req, res) => {
-  connection.query("SELECT * from spells", (err, result) => {
+  connection.query("SELECT id, name, level, range from spells", (err, result) => {
     if(err){
       console.log(err);
     }
@@ -186,7 +186,7 @@ dndRouter.get('/checkCharSpell/:sessionId/:charString/:spellId', checkUserCharac
 });
 
 dndRouter.get('/charSpells/:sessionId/:charString', checkUserCharacter, (req, res) => {
-  connection.query("SELECT s.* FROM charSpells c INNER JOIN spells s ON c.spellId = s.id WHERE c.characterId = (SELECT id from characters ch WHERE ch.charString = '" + req.params.charString + "' AND ch.userId = (SELECT id FROM users WHERE sessionId = '" + req.params.sessionId + "'))", (err, result) => {
+  connection.query("SELECT s.id, s.name, s.level, s.range FROM charSpells c INNER JOIN spells s ON c.spellId = s.id WHERE c.characterId = (SELECT id from characters ch WHERE ch.charString = '" + req.params.charString + "' AND ch.userId = (SELECT id FROM users WHERE sessionId = '" + req.params.sessionId + "'))", (err, result) => {
     if(err){
       console.log(err);
     };
