@@ -33,7 +33,7 @@ var connection = mysql.createConnection({
 
 // Get Spells
 dndRouter.get('/getSpells', (req, res) => {
-  connection.query("SELECT id, name, level, range from spells", (err, result) => {
+  connection.query("SELECT s.id, s.name, s.level, s.range from spells s", (err, result) => {
     if(err){
       console.log(err);
     }
