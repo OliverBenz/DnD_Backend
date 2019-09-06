@@ -56,7 +56,7 @@ dndRouter.get('/spellSpec/:id', (req, res) => {
     else{
       res.status(200);
       res.set('Content-Type', 'application/json');
-      res.send(JSON.stringify({ "spell": result, "result": false }));
+      res.send(JSON.stringify({ "spell": result, "result": true }));
     }
   });
 });
