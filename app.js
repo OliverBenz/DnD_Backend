@@ -267,7 +267,7 @@ dndRouter.post('/charNotes/:sessionId/:charString', checkUserCharacter, (req, re
 
     res.status(200);
     res.set('Content-Type', 'application/json');
-    res.send(JSON.stringify({ "id": result.insertId, "date": req.body.date, "note": req.body.note  }));
+    res.send(JSON.stringify({ "id": result.insertId, "date": req.body.date.split(" ")[0], "note": req.body.note  }));
   });
 });
 
