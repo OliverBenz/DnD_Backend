@@ -44,6 +44,22 @@ dndRouter.get('/getSpells', (req, res) => {
   });
 });
 
+dndRouter.get('/spellSpec/:id', (req, res) => {
+  connection.query("SELECT * FROM spells WHERE id = " + req.params.id, (err, result) => {
+    if(err){
+      console.log(err);
+
+      res.status(500);
+      res.set('Content-Type', 'application/json');
+      res.send(JSON.stringify({ "message": "Could not get Spell Information","result": false }));
+    }
+
+    res.status(200);
+    res.set('Content-Type', 'application/json');
+    res.send(JSON.stringify({ "spell": result, "result": false }));
+  });
+});
+
 // Get Alignments
 dndRouter.get('/alignments', (req, res) => {
   connection.query("SELECT id, name FROM alignments", (err, result) =>{
