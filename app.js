@@ -53,10 +53,11 @@ dndRouter.get('/spellSpec/:id', (req, res) => {
       res.set('Content-Type', 'application/json');
       res.send(JSON.stringify({ "message": "Could not get Spell Information","result": false }));
     }
-
-    res.status(200);
-    res.set('Content-Type', 'application/json');
-    res.send(JSON.stringify({ "spell": result, "result": false }));
+    else{
+      res.status(200);
+      res.set('Content-Type', 'application/json');
+      res.send(JSON.stringify({ "spell": result, "result": false }));
+    }
   });
 });
 
