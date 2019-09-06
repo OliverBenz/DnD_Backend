@@ -49,6 +49,10 @@ dndRouter.get('/alignments', (req, res) => {
   connection.query("SELECT id, name FROM alignments", (err, result) =>{
     if(err){
       console.log(err);
+
+      res.status(500);
+      res.set('Content-Type', 'application/json');
+      res.send(JSON.stringify({ "message": "Could not get alignments" }));      
     }
 
     res.status(200);
@@ -71,8 +75,6 @@ dndRouter.get('/backgrounds', (req, res) => {
     res.set('Content-Type', 'application/json');
     res.send(JSON.stringify(result));
   });
-
-  connection.end();
 });
 
 // -----------------------------------------
@@ -89,8 +91,6 @@ dndRouter.get('/charGeneral/:sessionId/:charString', checkUserCharacter, (req, r
     res.set('Content-Type', 'application/json');
     res.send(JSON.stringify(result[0]));
   });
-
-  connection.end();
 });
 
 dndRouter.patch('/charGeneral/:sessionId/:charString', checkUserCharacter, (req, res) => {
