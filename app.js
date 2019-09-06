@@ -256,7 +256,7 @@ dndRouter.get('/charNotes/:sessionId/:charString', checkUserCharacter, (req, res
 });
 
 dndRouter.post('/charNotes/:sessionId/:charString', checkUserCharacter, (req, res) => {
-  connection.query("INSERT INTO notes VALUES (0, (SELECT id FROM characters WHERE charString = '" + req.params.charString + "'), GETDATE(), '" + req.body.note + "')", (err, result) => {
+  connection.query("INSERT INTO notes VALUES (0, (SELECT id FROM characters WHERE charString = '" + req.params.charString + "'), '" + req.body.date + "', '" + req.body.note + "')", (err, result) => {
     if(err){
       console.log(err);
 
