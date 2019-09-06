@@ -33,7 +33,7 @@ var connection = mysql.createConnection({
 
 // Get Spells
 dndRouter.get('/getSpells', (req, res) => {
-  connection.query("SELECT s.id, s.name, s.level, s.range from spells s", (err, result) => {
+  connection.query("SELECT s.id, s.name, s.level, s.range from spells s ORDER BY name ASC", (err, result) => {
     if(err){
       console.log(err);
     }
@@ -256,7 +256,7 @@ dndRouter.get('/charNotes/:sessionId/:charString', checkUserCharacter, (req, res
 });
 
 dndRouter.post('/charNotes/:sessionId/:charString', checkUserCharacter, (req, res) => {
-  connection.query("INSERT INTO notes VALUES (0, (SELECT id FROM characters WHERE charString = '" + req.params.charString + "'), '" + req.body.date + "', '" + req.body.note + "')", (err, result) => {
+  connection.query("INSERT INTO notes VALUES (0, (SELECT id FROM characters WHERE charString = '" + req.params.charString + "'), GETDATE(), '" + req.body.note + "')", (err, result) => {
     if(err){
       console.log(err);
 
@@ -436,9 +436,6 @@ dndRouter.delete('/userChar/:sessionId', (req, res) => {
       }
     }
   });
-
-
-
 });
 
 
