@@ -69,7 +69,7 @@ dndRouter.get('/getSpells', (req, res) => {
 
     res.status(200);
     res.set('Content-Type', 'application/json');
-    res.send(JSON.stringify(result));
+    res.send(JSON.stringify({ "success": true, "data": result }));
   });
 });
 
@@ -80,12 +80,12 @@ dndRouter.get('/spellSpec/:id', (req, res) => {
 
       res.status(500);
       res.set('Content-Type', 'application/json');
-      res.send(JSON.stringify({ "message": "Could not get Spell Information","result": false }));
+      res.send(JSON.stringify({ "success": false, "message": "Could not get Spell Information" }));
     }
     else{
       res.status(200);
       res.set('Content-Type', 'application/json');
-      res.send(JSON.stringify({ "spell": result, "result": true }));
+      res.send(JSON.stringify({ "success": true, "data": result }));
     }
   });
 });
@@ -98,12 +98,12 @@ dndRouter.get('/alignments', (req, res) => {
 
       res.status(500);
       res.set('Content-Type', 'application/json');
-      res.send(JSON.stringify({ "message": "Could not get alignments" }));      
+      res.send(JSON.stringify({ "success": false, "message": "Could not get alignments" }));      
     }
 
     res.status(200);
     res.set('Content-Type', 'application/json');
-    res.send(JSON.stringify(result));
+    res.send(JSON.stringify({ "success": true, "data": result }));
   });
 });
 
@@ -114,12 +114,12 @@ dndRouter.get('/backgrounds', (req, res) => {
       console.log(err);
       res.status(500);
       res.set('Content-Type', 'application/json');
-      res.send(JSON.stringify({"message": "Could not get Backgrounds"}));
+      res.send(JSON.stringify({ "success": false, "message": "Could not get Backgrounds" }));
     }
 
     res.status(200);
     res.set('Content-Type', 'application/json');
-    res.send(JSON.stringify(result));
+    res.send(JSON.stringify({ "success": true, "data": result }));
   });
 });
 
@@ -131,11 +131,15 @@ dndRouter.get('/charGeneral/:sessionId/:charString', checkUserCharacter, (req, r
   connection.query("SELECT c.firstname, c.lastname, c.level, c.xp, a.name, c.background, c.age, c.height, weight FROM characters c INNER JOIN alignments a ON a.id = c.alignment WHERE c.charString='" + req.params.charString + "' AND c.userId = (SELECT id from users WHERE sessionId = '" + req.params.sessionId + "')", (err, result) => {
     if(err){
       console.log(err);
+
+      res.status(500);
+      res.set('Content-Type', 'application/json');
+      res.send(JSON.stringify({ "success": false, "message": "Could not get Character Information" }));
     }
 
     res.status(200);
     res.set('Content-Type', 'application/json');
-    res.send(JSON.stringify(result[0]));
+    res.send(JSON.stringify({ "success": true, "data": result[0]}));
   });
 });
 
@@ -158,11 +162,15 @@ dndRouter.get('/charMoney/:sessionId/:charString', checkUserCharacter, (req, res
   connection.query("SELECT copper, silver, electrum, gold, platinum from characters WHERE charString = '" + req.params.charString + "' AND userId = (SELECT id FROM users WHERE sessionId = '" + req.params.sessionId + "')", (err, result) => {
     if(err){
       console.log(err);
+
+      res.status(500);
+      res.set('Content-Type', 'application/json');
+      res.send(JSON.stringify({ "success": false, "message": "Could not get Character Money" }));
     }
 
     res.status(200);
     res.set('Content-Type', 'application/json');
-    res.send(JSON.stringify(result[0]));
+    res.send(JSON.stringify({ "success": true, "message": result[0]}));
   });
 });
 
@@ -174,7 +182,7 @@ dndRouter.patch('/charMoney/:sessionId/:charString', checkUserCharacter, (req, r
 
     res.status(200);
     res.set('Content-Type', 'application/json');
-    res.send(JSON.stringify({"message": "Update successful"}));
+    res.send(JSON.stringify({ "success": true, "message": "Update successful" }));
   });
 });
 
@@ -187,11 +195,15 @@ dndRouter.get('/charHealth/:sessionId/:charString', checkUserCharacter, (req, re
   connection.query("SELECT maxHealth, currentHealth, tempHealth from characters WHERE charString = '" + req.params.charString + "' AND userId = (SELECT id FROM users WHERE sessionId = '" + req.params.sessionId + "')", (err, result) => {
     if(err){
       console.log(err);
+
+      res.status(500);
+      res.set('Content-Type', 'application/json');
+      res.send(JSON.stringify({ "success": false, "message": "Could not get Character Health" }));
     }
 
     res.status(200);
     res.set('Content-Type', 'application/json');
-    res.send(JSON.stringify(result[0]));
+    res.send(JSON.stringify({ "success": true, "data": result[0]}));
   });
 });
 
@@ -203,7 +215,7 @@ dndRouter.patch('/charHealth/:sessionId/:charString', checkUserCharacter, (req, 
 
     res.status(200);
     res.set('Content-Type', 'application/json');
-    res.send(JSON.stringify({"message": "Update successful"}));
+    res.send(JSON.stringify({ "success": true, "message": "Update successful" }));
   });
 });
 
@@ -221,12 +233,12 @@ dndRouter.get('/checkCharSpell/:sessionId/:charString/:spellId', checkUserCharac
     if(result.length === 1){
       res.status(200);
       res.set('Content-Type', 'application/json');
-      res.send(JSON.stringify({ "result": true }));
+      res.send(JSON.stringify({ "success": true, "data": true }));
     }
     else{
       res.status(200);
       res.set('Content-Type', 'application/json');
-      res.send(JSON.stringify({ "result": false }));
+      res.send(JSON.stringify({ "success": true, "data": false }));
     }
   });
 });
@@ -239,7 +251,7 @@ dndRouter.get('/charSpells/:sessionId/:charString', checkUserCharacter, (req, re
 
     res.status(200);
     res.set('Content-Type', 'application/json');
-    res.send(JSON.stringify(result));
+    res.send(JSON.stringify({ "success": true, "data": result }));
   });
 });
 
@@ -249,7 +261,7 @@ dndRouter.post('/charSpells/:sessionId/:charString', checkUserCharacter, (req, r
 
     res.status(200);
     res.set('Content-Type', 'application/json');
-    res.send(JSON.stringify({ "message": "Successfully Added Spell", "result": true }));
+    res.send(JSON.stringify({ "success": true, "message": "Successfully Added Spell" }));
   });
 });
 
@@ -259,7 +271,7 @@ dndRouter.delete('/charSpells/:sessionId/:charString', checkUserCharacter, (req,
 
     res.status(200);
     res.set('Content-Type', 'application/json');
-    res.send(JSON.stringify({ "message": "Successfully Removed Spell", "result": true }));
+    res.send(JSON.stringify({ "success": true, "message": "Successfully Removed Spell" }));
   });
 });
 
@@ -274,12 +286,12 @@ dndRouter.get('/charNotes/:sessionId/:charString', checkUserCharacter, (req, res
 
       res.status(500);
       res.set('Content-Type', 'application/json');
-      res.send(JSON.stringify({ "message": "Could not get Notes" }));
+      res.send(JSON.stringify({ "success": false, "message": "Could not get Notes" }));
     }
 
     res.status(200);
     res.set('Content-Type', 'application/json');
-    res.send(JSON.stringify(result));
+    res.send(JSON.stringify({ "success": true, "data": result }));
   });
 });
 
@@ -290,12 +302,17 @@ dndRouter.post('/charNotes/:sessionId/:charString', checkUserCharacter, (req, re
 
       res.status(500);
       res.set('Content-Type', 'application/json');
-      res.send(JSON.stringify({ "message": "Could not add note" }));
+      res.send(JSON.stringify({ "success": false, "message": "Could not add note" }));
     }
 
     res.status(200);
     res.set('Content-Type', 'application/json');
-    res.send(JSON.stringify({ "id": result.insertId, "date": req.body.date.split(" ")[0], "note": req.body.note  }));
+    let data = {
+      "id": result.insertId,
+      "date": req.body.date.split(" ")[0],
+      "note": req.body.note
+    }
+    res.send(JSON.stringify({ "success": true, "data": data }));
   });
 });
 
@@ -306,12 +323,12 @@ dndRouter.patch('/charNotes/:sessionId/:charString', checkUserCharacter, (req, r
 
       res.status(500);
       res.set('Content-Type', 'application/json');
-      res.send(JSON.stringify({ "message": "Could not update Note", "result": false }));
+      res.send(JSON.stringify({ "success": false, "message": "Could not update Note" }));
     }
     
     res.status(200);
     res.set('Content-Type', 'application/json');
-    res.send(JSON.stringify({ "message": "Successfully updated Note", "result": true }));
+    res.send(JSON.stringify({ "success": true, "message": "Successfully updated Note" }));
   });
 });
 
@@ -322,12 +339,12 @@ dndRouter.delete('/charNotes/:sessionId/:charString', checkUserCharacter, (req, 
 
       res.status(500);
       res.set('Content-Type', 'application/json');
-      res.send(JSON.stringify({ "message": "Could not delete Note", "result": false }));
+      res.send(JSON.stringify({ "success": false, "message": "Could not delete Note" }));
     }
 
     res.status(200);
     res.set('Content-Type', 'application/json');
-    res.send(JSON.stringify({ "message": "Successfully deleted Note", "result": true }));
+    res.send(JSON.stringify({ "success": true, "message": "Successfully deleted Note" }));
   });
 });
 
@@ -342,12 +359,12 @@ dndRouter.get('/charTrackers/:sessionId/:charString', checkUserCharacter, (req, 
 
       res.status(500);
       res.set('Content-Type', 'application/json');
-      res.send(JSON.stringify({ "message": "Could not get Trackers", "result": false }));
+      res.send(JSON.stringify({ "success": false, "message": "Could not get Trackers" }));
     }
 
     res.status(200);
     res.set('Content-Type', 'application/json');
-    res.send(JSON.stringify({ "result": true, "data": result }));
+    res.send(JSON.stringify({ "success": true, "data": result }));
   });
 });
 
@@ -364,7 +381,7 @@ dndRouter.get('/charList/:sessionId', (req, res) => {
 
     res.status(200);
     res.set('Content-Type', 'application/json');
-    res.send(JSON.stringify(result));
+    res.send(JSON.stringify({ "success": true, "data": result }));
   });
 });
 
@@ -377,20 +394,20 @@ dndRouter.post('/userLogin', (req, res) => {
     if(result.length === 0){
       res.status(401);
       res.set('Content-Type', 'application/json');
-      res.send(JSON.stringify({"message": "Invalid E-Mail"}));
+      res.send(JSON.stringify({ "success": false, "message": "Invalid E-Mail"}));
     }
     else{
       if(bcrypt.compareSync(req.body.password, result[0]["password"])){
         connection.query("SELECT sessionId FROM users WHERE email='" + req.body.email + "'", (err, result) => {
           res.status(200);
           res.set('Content-Type', 'application/json');
-          res.send(JSON.stringify(result[0]));
+          res.send(JSON.stringify({ "success": true, "data": { "sessionId": result[0] }}));
         });
       }
       else{
         res.status(401);
         res.set('Content-Type', 'application/json');
-        res.send(JSON.stringify({"message": "Invalid password"}));
+        res.send(JSON.stringify({ "success": false, "message": "Invalid password"}));
       }
     }
   });
@@ -406,13 +423,13 @@ dndRouter.post('/userRegister', (req, res) => {
       if(err.errno == 1062){
         res.status(409);
         res.set('Content-Type', 'application/json');
-        res.send(JSON.stringify({"message": "User already registered"}));
+        res.send(JSON.stringify({ "success": false, "message": "User already registered"}));
       }
     } 
 
     res.status(200);
     res.set('Content-Type', 'application/json');
-    res.send(JSON.stringify(sessionId));
+    res.send(JSON.stringify({ "success": true, "data": { "sessionId": sessionId }}));
   });
 });
 
@@ -439,13 +456,13 @@ dndRouter.post('/userChar/:sessionId', (req, res) => {
 
         res.status(409);
         res.set('Content-Type', 'application/json');
-        res.send(JSON.stringify({"message": "Char already registered"}));
+        res.send(JSON.stringify({ "success": false, "message": "Char already registered"}));
       }
     }
 
     res.status(200);
     res.set('Content-Type', 'application/json');
-    res.send(JSON.stringify({"charString": charString}));
+    res.send(JSON.stringify({ "success": true, "data": { "charString": charString }}));
   });
 });
 
@@ -460,7 +477,7 @@ dndRouter.delete('/userChar/:sessionId', (req, res) => {
     if(result.length === 0){
       res.status(401);
       res.set('Content-Type', 'application/json');
-      res.send(JSON.stringify({"message": "Invalid SessionId"}));
+      res.send(JSON.stringify({ "success": false, "message": "Invalid SessionId"}));
     }
     else{
       // If password correct
@@ -470,18 +487,18 @@ dndRouter.delete('/userChar/:sessionId', (req, res) => {
             console.log(err);
             res.status(500);
             res.set('Content-Type', 'application/json');
-            res.send(JSON.stringify({"message": "Could not delete Character"}));
+            res.send(JSON.stringify({ "success": false, "message": "Could not delete Character" }));
           }
 
           res.status(200);
           res.set('Content-Type', 'application/json');
-          res.send(JSON.stringify({"result": true, "message": "Deletion successful"}));
+          res.send(JSON.stringify({ "success": true, "message": "Deletion successful" }));
         });        
       }
       else{
         res.status(401);
         res.set('Content-Type', 'application/json');
-        res.send(JSON.stringify({"message": "Invalid password"}));
+        res.send(JSON.stringify({ "success": false, "message": "Invalid password" }));
       }
     }
   });
