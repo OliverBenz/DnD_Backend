@@ -30,22 +30,21 @@ var dbconfig = {
 var connection;
 
 function handleDisconnect() {
-  connection = mysql.createConnection(dbconfig); // Recreate the connection, since
-                                                  // the old one cannot be reused.
+  connection = mysql.createConnection(dbconfig);
 
-  connection.connect(function(err) {              // The server is either down
-    if(err) {                                     // or restarting (takes a while sometimes).
+  connection.connect(function(err) {
+    if(err) {
       console.log('error when connecting to db:', err);
-      setTimeout(handleDisconnect, 2000); // We introduce a delay before attempting to reconnect,
-    }                                     // to avoid a hot loop, and to allow our node script to
-  });                                     // process asynchronous requests in the meantime.
-                                          // If you're also serving http, display a 503 error.
+      setTimeout(handleDisconnect, 2000);
+    }
+  });
+
   connection.on('error', function(err) {
     console.log('db error', err);
-    if(err.code === 'PROTOCOL_CONNECTION_LOST') { // Connection to the MySQL server is usually
-      handleDisconnect();                         // lost due to either server restart, or a
-    } else {                                      // connnection idle timeout (the wait_timeout
-      throw err;                                  // server variable configures this)
+    if(err.code === 'PROTOCOL_CONNECTION_LOST') {
+      handleDisconnect();
+    } else {
+      throw err;
     }
   });
 }
@@ -62,6 +61,10 @@ dndRouter.get('/getSpells', (req, res) => {
   connection.query("SELECT s.id, s.name, s.level, s.range from spells s ORDER BY name ASC", (err, result) => {
     if(err){
       console.log(err);
+
+      res.status(500);
+      res.set('Content-Type', 'application/json');
+      res.send(JSON.stringify({"success": false, "message": "Could not get Spells" }))
     }
 
     res.status(200);
@@ -264,7 +267,6 @@ dndRouter.delete('/charSpells/:sessionId/:charString', checkUserCharacter, (req,
 // -----------------------------------------
 //            Character Notes
 // -----------------------------------------
-
 dndRouter.get('/charNotes/:sessionId/:charString', checkUserCharacter, (req, res) => {
   connection.query("SELECT id, date, note FROM notes WHERE charId = (SELECT id FROM characters WHERE charString = '" + req.params.charString + "') ORDER BY date DESC", (err, result) => {
     if(err){
@@ -328,6 +330,27 @@ dndRouter.delete('/charNotes/:sessionId/:charString', checkUserCharacter, (req, 
     res.send(JSON.stringify({ "message": "Successfully deleted Note", "result": true }));
   });
 });
+
+
+// -----------------------------------------
+//            Character Trackers
+// -----------------------------------------
+dndRouter.get('/charTrackers/:sessionId/:charString', checkUserCharacter, (req, res) => {
+  connection.query("SELECT * FROM charTrackers WHERE charId = (SELECT id FROM characters WHERE charString = '" + req.params.charString + "')", (err, result) => {
+    if(err){
+      console.log(err);
+
+      res.status(500);
+      res.set('Content-Type', 'application/json');
+      res.send(JSON.stringify({ "message": "Could not get Trackers", "result": false }));
+    }
+
+    res.status(200);
+    res.set('Content-Type', 'application/json');
+    res.send(JSON.stringify({ "result": true, "data": result }));
+  });
+});
+
 
 // -----------------------------------------
 //                  User
