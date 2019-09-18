@@ -170,7 +170,7 @@ dndRouter.get('/charMoney/:sessionId/:charString', checkUserCharacter, (req, res
 
     res.status(200);
     res.set('Content-Type', 'application/json');
-    res.send(JSON.stringify({ "success": true, "message": result[0]}));
+    res.send(JSON.stringify({ "success": true, "data": result[0]}));
   });
 });
 
