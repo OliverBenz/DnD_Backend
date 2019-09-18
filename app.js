@@ -403,7 +403,7 @@ dndRouter.post('/userLogin', (req, res) => {
         connection.query("SELECT sessionId FROM users WHERE email='" + req.body.email + "'", (err, result) => {
           res.status(200);
           res.set('Content-Type', 'application/json');
-          res.send(JSON.stringify({ "success": true, "data": { "sessionId": result[0] }}));
+          res.send(JSON.stringify({ "success": true, "data": result[0] }));
         });
       }
       else{
@@ -431,7 +431,7 @@ dndRouter.post('/userRegister', (req, res) => {
 
     res.status(200);
     res.set('Content-Type', 'application/json');
-    res.send(JSON.stringify({ "success": true, "data": { "sessionId": sessionId }}));
+    res.send(JSON.stringify({ "success": true, "data": sessionId }));
   });
 });
 
