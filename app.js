@@ -261,7 +261,8 @@ dndRouter.post('/charSpells/:sessionId/:charString', checkUserCharacter, (req, r
 
     res.status(200);
     res.set('Content-Type', 'application/json');
-    res.send(JSON.stringify({ "success": true, "message": "Successfully Added Spell" }));
+    // Data is the userHasSpell Attribute in Frontend -> True means user has spell
+    res.send(JSON.stringify({ "success": true, "message": "Successfully Added Spell", "data": true }));
   });
 });
 
@@ -271,7 +272,8 @@ dndRouter.delete('/charSpells/:sessionId/:charString', checkUserCharacter, (req,
 
     res.status(200);
     res.set('Content-Type', 'application/json');
-    res.send(JSON.stringify({ "success": true, "message": "Successfully Removed Spell" }));
+    // Data is the userHasSpell Attribute in Frontend -> False means user doesn't have spell
+    res.send(JSON.stringify({ "success": true, "message": "Successfully Removed Spell", "data": false }));
   });
 });
 
