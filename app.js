@@ -11,7 +11,7 @@ var dndRouter = express.Router();
 app.use('/dnd', dndRouter);
 
 // Import files
-var connection = require("./src/dbcon.js");
+var connection = require("./src/dbcon.js").connection;
 
 var general = require("./src/general.js");
 
