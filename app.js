@@ -11,6 +11,8 @@ var dndRouter = express.Router();
 app.use('/dnd', dndRouter);
 
 // Import files
+var connection = require("./src/dbcon.js");
+
 var general = require("./src/general.js");
 
 var charGen = require("./src/character/charGeneral.js");
@@ -63,6 +65,7 @@ dndRouter.delete('/charNotes/:sessionId/:charString', checkUserCharacter, (req, 
 
 // Character Trackers
 dndRouter.get('/charTrackers/:sessionId/:charString', checkUserCharacter, (req, res) => charTrackers.getCharTrackers(req, res));
+
 
 // -----------------------------------------
 //                  User
