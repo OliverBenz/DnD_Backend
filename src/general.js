@@ -1,4 +1,4 @@
-function getAlignments(req, res){
+getAlignments = function(req, res){
   connection.query("SELECT id, name FROM alignments", (err, result) =>{
     if(err){
       console.log(err);
