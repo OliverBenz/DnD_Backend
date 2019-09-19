@@ -1,4 +1,4 @@
-getAlignments = function(req, res){
+exports.getAlignments = function(req, res){
   connection.query("SELECT id, name FROM alignments", (err, result) =>{
     if(err){
       console.log(err);
@@ -12,8 +12,4 @@ getAlignments = function(req, res){
     res.set('Content-Type', 'application/json');
     res.send(JSON.stringify({ "success": true, "data": result }));
   });
-}
-
-module.exports = {
-  getAlignments,
 }
