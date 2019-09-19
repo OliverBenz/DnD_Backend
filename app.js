@@ -95,7 +95,7 @@ dndRouter.get('/spellSpec/:id', (req, res) => {
 });
 
 // Get Alignments
-dndRouter.get('/alignments', (req, res) => general.getAlignments);
+dndRouter.get('/alignments', (req, res) => general.getAlignments(req, res));
 
 // Get Backgrounds
 dndRouter.get('/backgrounds', (req, res) => {
