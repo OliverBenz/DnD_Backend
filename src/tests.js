@@ -1,4 +1,4 @@
-var connection = require("./src/dbcon.js").connection;
+var connection = require("./dbcon.js").connection;
 
 // Testing function
 exports.checkUserCharacter = function(req, res, next){
