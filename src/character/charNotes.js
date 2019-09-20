@@ -41,7 +41,7 @@ exports.postCharNotes = function(req, res){
 
 // Update existing Note
 exports.patchCharNotes = function(req, res){
-  connection.query("UPDATE notes SET note='" + req.body.note + "' WHERE id = " + req.body.id, (err, result) => {
+  connection.query("UPDATE notes SET note='" + req.body.note + "' WHERE id = " + req.body.id + " AND charId = (SELECT id FROM characters WHERE charString = '" + req.params.charString + "')", (err, result) => {
     if(err){
       console.log(err);
 
@@ -58,7 +58,7 @@ exports.patchCharNotes = function(req, res){
 
 // Delete Note
 exports.delCharNotes = function(req, res){
-  connection.query("DELETE FROM notes WHERE id = " + req.body.id, (err, result) => {
+  connection.query("DELETE FROM notes WHERE id = " + req.body.id + " AND charId = (SELECT id FROM characters WHERE charString = '" + req.params.charString + "')", (err, result) => {
     if(err){
       console.log(err);
 
