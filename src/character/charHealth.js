@@ -19,7 +19,15 @@ exports.getCharHealth = function(req, res){
 
 // Update Health
 exports.patchCharHealth = function(req, res){
-  connection.query("UPDATE characters SET maxHealth = " + req.body.maxHealth + ", currentHealth = " + req.body.currentHealth + ", tempHealth = " + req.body.tempHealth + " WHERE charString = '" + req.params.charString + "'", (err, result) => {
+  let sql = "UPDATE characters SET ";
+
+  if(req.body.maxHealth !== undefined) sql += "maxHealth = " + req.body.maxHealth + " ";
+  if(req.body.currentHealth !== undefined) sql += "currentHealth = " + req.body.currentHealth + " ";
+  if(req.body.tempHealth !== undefined) sql += "tempHealth = " + req.body.tempHealth + " ";
+
+  sql += "WHERE charString = '" + req.params.charString + "'"
+
+  connection.query(sql, (err, result) => {
     if(err){
       console.log(err);
     }
