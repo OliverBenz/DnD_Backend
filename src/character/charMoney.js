@@ -19,7 +19,7 @@ exports.getCharMoney = function(req, res){
 
 // Update Money
 exports.patchCharMoney = function(req, res){
-  connection.query("UPDATE characters SET copper = " + req.body.copper + ", silver = " + req.body.silver + ", electrum = " + req.body.electrum + ", gold = " + req.body.gold + ", platinum = " + req.body.platinum + ", WHERE charString = '" + req.params.charString + "'", (err, result) => {
+  connection.query("UPDATE characters SET copper = " + req.body.copper + ", silver = " + req.body.silver + ", electrum = " + req.body.electrum + ", gold = " + req.body.gold + ", platinum = " + req.body.platinum + " WHERE charString = '" + req.params.charString + "'", (err, result) => {
     if(err){
       console.log(err);
     }
