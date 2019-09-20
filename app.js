@@ -11,7 +11,7 @@ var dndRouter = express.Router();
 app.use('/dnd', dndRouter);
 
 // Import files
-var connection = require("./src/dbcon.js").connection;
+var checkUserCharacter = require("./src/tests.js").checkUserCharacter;
 
 var general = require("./src/general.js");
 
@@ -80,25 +80,6 @@ dndRouter.get('/charList/:sessionId', (req, res) => userChars.getCharList(req, r
 dndRouter.post('/userChar/:sessionId', (req, res) => userChars.postChar(req, res));
 dndRouter.delete('/userChar/:sessionId', (req, res) => userChars.delChar(req, res));
 
-
-// Testing function
-function checkUserCharacter(req, res, next){
-  // Check if user/char exist and are connected
-  connection.query("SELECT id FROM characters WHERE charString='" + req.params.charString + "' AND userId = (SELECT id FROM users WHERE sessionId='" + req.params.sessionId + "')", (err, result) => {
-    if(err){
-      console.log(err);
-    };
-
-    if(result.length === 0){
-      res.status(401);
-      res.set('Content-Type', 'application/json');
-      res.send(JSON.stringify({"message": "Wrong CharacterId / SessionId"}));
-    }
-    else{
-      next();
-    }
-  });
-}
 
 app.listen(3004, () => {
   console.log('Listening port 3004');
