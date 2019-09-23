@@ -66,6 +66,8 @@ dndRouter.delete('/charNotes/:sessionId/:charString', checkUserCharacter, (req, 
 
 // Character Trackers
 dndRouter.get('/charTrackers/:sessionId/:charString', checkUserCharacter, (req, res) => charTrackers.getCharTrackers(req, res));
+dndRouter.post('/charTrackers/:sessionId/:charString', checkUserCharacter, (req, res) => charTrackers.postCharTracker(req, res));
+dndRouter.patch('/charTrackers/:sessionId/:charString', checkUserCharacter, (req, res) => charTrackers.patchCharTracker(req, res));
 
 
 // -----------------------------------------

@@ -13,8 +13,8 @@ exports.getCharTrackers = function(req, res){
   });
 }
 
-exports.addCharTracker = function(req, res){
-  connection.query("INSERT INTO charTrackers VALUES id, charId, title, value, maxValue, minValue", (err, result) => {
+exports.postCharTracker = function(req, res){
+  connection.query("INSERT INTO charTrackers VALUES 0, (SELECT id FROM characters WHERE charString = " + req.params.charString + "), " + req.body.title + ", " + req.body.value + ", " + req.body.maxValue + ", " + req.body.minValue + "", (err, result) => {
     if(err){
       console.log(err);
 
@@ -33,7 +33,7 @@ exports.addCharTracker = function(req, res){
 }
 
 exports.patchCharTracker = function(req, res){
-  connection.query("UPDATE charTracker SET value = value WHERE trackerId = trackerId AND charId = (SELECT id FROM characters WHERE charString = charString)", (err, result) => {
+  connection.query("UPDATE charTracker SET value = " + req.body.value + " WHERE trackerId = " + req.body.id + " AND charId = (SELECT id FROM characters WHERE charString = " + req.params.charString + ")", (err, result) => {
     if(err){
       console.log(err);
 
