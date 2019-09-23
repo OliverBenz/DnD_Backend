@@ -17,7 +17,7 @@ var dbconfig = {
 };
 var connection;
 
-exports.handleDisconnect = function() {
+function handleDisconnect() {
   connection = mysql.createConnection(dbconfig);
 
   connection.connect(function(err) {
@@ -36,4 +36,7 @@ exports.handleDisconnect = function() {
     }
   });
 }
+
+handleDisconnect();
+
 exports.connection = connection;
