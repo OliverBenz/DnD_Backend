@@ -11,6 +11,7 @@ var dndRouter = express.Router();
 app.use('/dnd', dndRouter);
 
 // Import files
+var dbcon = require("./src/dbcon.js");
 var checkUserCharacter = require("./src/tests.js").checkUserCharacter;
 
 var general = require("./src/general.js");
@@ -25,6 +26,7 @@ var charTrackers = require("./src/character/charTrackers.js")
 var userChars = require("./src/user/userChars.js");
 var userGeneral = require("./src/user/userGeneral.js");
 
+dbcon.handleDisconnect();
 
 // -----------------------------------------
 //                 General
