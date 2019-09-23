@@ -32,6 +32,7 @@ dbcon.handleDisconnect();
 //                 General
 // -----------------------------------------
 dndRouter.get('/spells', (req, res) => general.getSpells(req, res));
+dndRouter.get('/spells/:offset/:limit', (req, res) => general.getSpellsLimit(req, res));
 dndRouter.get('/spellSpec/:id', (req, res) => general.getSpellSpec(req, res));
 dndRouter.get('/alignments', (req, res) => general.getAlignments(req, res));
 dndRouter.get('/backgrounds', (req, res) => general.getBackgrounds(req, res));

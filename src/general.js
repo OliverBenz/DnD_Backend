@@ -52,6 +52,24 @@ exports.getSpells = function(req, res){
   });
 }
 
+// Get Spells with Limit
+exports.getSpellsLimit = function(req, res){
+  connection.query("SELECT s.id, s.name, s.level, s.range from spells s ORDER BY name ASC LIMIT " + req.params.limit + " OFFSET " + req.params.offset, (err, result) => {
+    if(err){
+      console.log(err);
+
+      res.status(500);
+      res.set('Content-Type', 'application/json');
+      res.send(JSON.stringify({"success": false, "message": "Could not get Spells" }))
+    }
+
+    res.status(200);
+    res.set('Content-Type', 'application/json');
+    res.send(JSON.stringify({ "success": true, "data": result }));
+  });
+}
+
+
 // Get Spell Specific
 exports.getSpellSpec = function(req, res){
   connection.query("SELECT * FROM spells WHERE id = " + req.params.id, (err, result) => {
