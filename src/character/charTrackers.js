@@ -14,7 +14,7 @@ exports.getCharTrackers = function(req, res){
 }
 
 exports.postCharTracker = function(req, res){
-  connection.query("INSERT INTO charTrackers VALUES (0, (SELECT id FROM characters WHERE charString = '" + req.params.charString + "'), " + req.body.title + ", " + req.body.value + ", " + req.body.maxValue + ", " + req.body.minValue + ")", (err, result) => {
+  connection.query("INSERT INTO charTrackers VALUES (0, (SELECT id FROM characters WHERE charString = '" + req.params.charString + "'), '" + req.body.title + "', " + req.body.value + ", " + req.body.maxValue + ", " + req.body.minValue + ")", (err, result) => {
     if(err){
       console.log(err);
 
