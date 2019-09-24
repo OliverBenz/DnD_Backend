@@ -36,7 +36,7 @@ var userGeneral = require("./src/user/userGeneral.js");
 //                 General
 // -----------------------------------------
 genRouter.get('/spells', (req, res) => general.getSpells(req, res));
-genRouter.get('/spells/:offset/:limit', (req, res) => general.getSpellsLimit(req, res));
+genRouter.get('/spells/:offset/:limit/:filter?', (req, res) => general.getSpellsLimit(req, res));
 genRouter.get('/spellSpec/:id', (req, res) => general.getSpellSpec(req, res));
 genRouter.get('/alignments', (req, res) => general.getAlignments(req, res));
 genRouter.get('/backgrounds', (req, res) => general.getBackgrounds(req, res));
