@@ -87,8 +87,8 @@ userRouter.post('/register', (req, res) => userGeneral.register(req, res));
 
 // Character Information
 userRouter.get('/charList/:sessionId', (req, res) => userChars.getCharList(req, res));
-userRouter.post('/char/:sessionId', (req, res) => userChars.postChar(req, res));
-userRouter.delete('/char/:sessionId', (req, res) => userChars.delChar(req, res));
+userRouter.post('/character/:sessionId', (req, res) => userChars.postChar(req, res));
+userRouter.delete('/character/:sessionId', (req, res) => userChars.delChar(req, res));
 
 
 app.listen(3004, () => {
