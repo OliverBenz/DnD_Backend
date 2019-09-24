@@ -61,7 +61,7 @@ charRouter.patch('/health/:sessionId/:charString', checkUserCharacter, (req, res
 // Character Spells
 charRouter.get('/checkSpell/:sessionId/:charString/:spellId', checkUserCharacter, (req, res) => charSpells.checkCharSpell(req, res));
 charRouter.get('/spells/:sessionId/:charString', checkUserCharacter, (req, res) => charSpells.getCharSpells(req, res));
-charRouter.get('/spells/:sessionId/:charString/:offset/:limit', checkUserCharacter, (req, res) => charSpells.getCharSpellsLimit(req, res));
+charRouter.get('/spells/:sessionId/:charString/:offset/:limit?', checkUserCharacter, (req, res) => charSpells.getCharSpellsLimit(req, res));
 charRouter.post('/spells/:sessionId/:charString', checkUserCharacter, (req, res) => charSpells.postCharSpell(req, res));
 charRouter.delete('/spells/:sessionId/:charString', checkUserCharacter, (req, res) => charSpells.delCharSpell(req, res));
 
