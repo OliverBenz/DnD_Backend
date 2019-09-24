@@ -55,7 +55,7 @@ exports.getSpells = function(req, res){
 // Get Spells with Limit
 exports.getSpellsLimit = function(req, res){
   let sql = "SELECT s.id, s.name, s.level, s.range from spells s ORDER BY name ASC LIMIT " + req.params.limit + " OFFSET " + req.params.offset;
-  if(req.params.filter) sql = "SELECT s.id, s.name, s.level, s.range from spells s WHERE s.name LIKE '" + req.params.filter + "' ORDER BY name ASC LIMIT " + req.params.limit + " OFFSET " + req.params.offset;
+  if(req.params.filter) sql = "SELECT s.id, s.name, s.level, s.range from spells s WHERE s.name LIKE '%" + req.params.filter + "%' ORDER BY name ASC LIMIT " + req.params.limit + " OFFSET " + req.params.offset;
 
   connection.query(sql, (err, result) => {
     if(err){

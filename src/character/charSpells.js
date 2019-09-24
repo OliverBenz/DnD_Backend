@@ -20,7 +20,7 @@ exports.getCharSpells = function(req, res){
 // Get Spells with Limit
 exports.getCharSpellsLimit = function(req, res){
   let sql = "SELECT s.id, s.name, s.level, s.range FROM charSpells c INNER JOIN spells s ON c.spellId = s.id WHERE c.characterId = (SELECT id from characters ch WHERE ch.charString = '" + req.params.charString + "' AND ch.userId = (SELECT id FROM users WHERE sessionId = '" + req.params.sessionId + "')) ORDER BY s.name ASC LIMIT " + req.params.limit + " OFFSET " + req.params.offset;
-  if(req.params.filter) sql = "SELECT s.id, s.name, s.level, s.range FROM charSpells c INNER JOIN spells s ON c.spellId = s.id WHERE c.characterId = (SELECT id from characters ch WHERE ch.charString = '" + req.params.charString + "' AND ch.userId = (SELECT id FROM users WHERE sessionId = '" + req.params.sessionId + "')) WHERE s.name LIKE '" + req.params.filter + "' ORDER BY s.name ASC LIMIT " + req.params.limit + " OFFSET " + req.params.offset
+  if(req.params.filter) sql = "SELECT s.id, s.name, s.level, s.range FROM charSpells c INNER JOIN spells s ON c.spellId = s.id WHERE c.characterId = (SELECT id from characters ch WHERE ch.charString = '" + req.params.charString + "' AND ch.userId = (SELECT id FROM users WHERE sessionId = '" + req.params.sessionId + "')) WHERE s.name LIKE '%" + req.params.filter + "%' ORDER BY s.name ASC LIMIT " + req.params.limit + " OFFSET " + req.params.offset
 
   connection.query(sql, (err, result) => {
     if(err){
