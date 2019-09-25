@@ -20,7 +20,9 @@ var intValues = [
 exports.checkData = function(req, res, next){
   if(sanitize(req)){
     if(req.params.sessionId && req.params.charString){
-      if(checkUserCharacter(req)) next();
+      if(checkUserCharacter(req)) {
+        next();
+      }
       else{
         send(res, 500, false, "SessionId does not match charString", []);
       }
@@ -79,6 +81,11 @@ checkUserCharacter = function(req){
       console.log(err);
       return false;
     };
+
+    console.log(result.length);
+    console.log(result);
+    console.log("sessionid" + req.params.sessionId);
+    console.log("charString" + req.params.charString);
 
     if(result.length === 0){
       return false;
