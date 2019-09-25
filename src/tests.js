@@ -67,8 +67,10 @@ sanitize = function(req){
   // Check Body
   for(let key in req.body){
     for(let i = 0; i < checkStrings.length; i++){
-      if(req.body[key].toUpperCase().includes(checkStrings[i].toUpperCase())){
-        return false;
+      if (!intValues.includes(key)){
+        if(req.body[key].toUpperCase().includes(checkStrings[i].toUpperCase())){
+          return false;
+        }
       }
     }
 
