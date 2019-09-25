@@ -20,7 +20,7 @@ var intValues = [
 exports.checkData = function(req, res, next){
   if(sanitize(req)){
     if(req.params.sessionId && req.params.charString){
-      if(checkUserCharacter(req)) {
+      if(checkUserCharacter(req)){
         next();
       }
       else{
@@ -80,13 +80,8 @@ checkUserCharacter = function(req){
     if(err){
       console.log(err);
       return false;
-    };
-
-    console.log(result.length);
-    console.log(result);
-    console.log("sessionid" + req.params.sessionId);
-    console.log("charString" + req.params.charString);
-
+    }
+    
     if(result.length === 0){
       return false;
     }
