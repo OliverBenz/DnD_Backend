@@ -26,9 +26,9 @@ var intValues = [
 ];
 
 exports.checkData = function(req, res, next){
-  // Sanitize Parameters and Body
-  if(sanitize(req)){
-    // If sessionId and charString provided -> check if connected
+  // If params and body values are OK
+  if(sanitize(req.params) && sanitize(req.body)){
+    // If character/user check necessary and OK
     if(req.params.sessionId && req.params.charString){
       connection.query("SELECT id FROM characters WHERE charString='" + req.params.charString + "' AND userId = (SELECT id FROM users WHERE sessionId='" + req.params.sessionId + "')", (err, result) => {
         if(err){
@@ -53,46 +53,22 @@ exports.checkData = function(req, res, next){
   }
 }
 
-// Testing function
-sanitize = function(req){
-  // Check Parameters
-  for(let key in req.params) {
-    for(let i = 0; i < checkStrings.length; i++){
-      if(!intValues.includes(key)){
-        if(req.params[key].toUpperCase().includes(checkStrings[i].toUpperCase())){
+sanitize = function(req, data){
+  for(let key in data){
+    // If String -> Check for cautionStrings
+    if(! intValues.includes(key)){
+      for(let i = 0; i < cautionStrings.length; i++){
+        if(data[key].toUpperCase().includes(cautionStrings[i].toUpperCase())){
           return false;
         }
       }
     }
-  
-    // Check if INT values contain chars
-    for(let i = 0; i < intValues.length; i++){
-      if(key === intValues[i]){
-        // console.log(!(req.params[key] == parseInt(req.params[key])));
-        if (!(req.params[key] == parseInt(req.params[key]))) return false;
-      }
+    // If INT -> Check if really INT
+    else{
+      // If value is not equals to INT of value -> value includes char
+      if(!(data[key] == parseInt(data[key]))) return false;
     }
   }
-
-  // Check Body
-  for(let key in req.body){
-    for(let i = 0; i < checkStrings.length; i++){
-      if (!intValues.includes(key)){
-        if(req.body[key].toUpperCase().includes(checkStrings[i].toUpperCase())){
-          return false;
-        }
-      }
-    }
-
-    // Check if INT values contain chars
-    for(let i = 0; i < intValues.length; i++){
-      if(key === intValues[i]){
-        // console.log(!(req.params[key] == parseInt(req.params[key])));
-        if (!(req.body[key] == parseInt(req.body[key]))) return false;
-      }
-    }
-  }
-
   return true;
 }
 
