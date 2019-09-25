@@ -14,7 +14,15 @@ var checkStrings = [
 var intValues = [
   "id",
   "offset",
-  "limit"
+  "limit",
+  "copper",
+  "silver",,
+  "electrum",
+  "gold",
+  "platinum",
+  "tempHealth",
+  "currentHealth",
+  "maxHealth"
 ];
 
 exports.checkData = function(req, res, next){
@@ -50,8 +58,10 @@ sanitize = function(req){
   // Check Parameters
   for(let key in req.params) {
     for(let i = 0; i < checkStrings.length; i++){
-      if(req.params[key].toUpperCase().includes(checkStrings[i].toUpperCase())){
-        return false;
+      if(!intValues.includes(key)){
+        if(req.params[key].toUpperCase().includes(checkStrings[i].toUpperCase())){
+          return false;
+        }
       }
     }
   
