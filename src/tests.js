@@ -18,14 +18,23 @@ var intValues = [
 ];
 
 exports.checkData = function(req, res, next){
+  // Sanitize Parameters and Body
   if(sanitize(req)){
+    // If sessionId and charString provided -> check if connected
     if(req.params.sessionId && req.params.charString){
-      if(checkUserCharacter(req)){
-        next();
-      }
-      else{
-        send(res, 500, false, "SessionId does not match charString", []);
-      }
+      connection.query("SELECT id FROM characters WHERE charString='" + req.params.charString + "' AND userId = (SELECT id FROM users WHERE sessionId='" + req.params.sessionId + "')", (err, result) => {
+        if(err){
+          console.log(err);
+          send(res, 500, false, "Could not check character", []);
+        }
+
+        if(result.length === 0){
+          send(res, 500, false, "sessionId and charString not connected", []);
+        }
+        else{
+          next();
+        }
+      });
     }
     else{
       next();
@@ -74,23 +83,6 @@ sanitize = function(req){
 
   return true;
 }
-
-checkUserCharacter = function(req){
-  connection.query("SELECT id FROM characters WHERE charString='" + req.params.charString + "' AND userId = (SELECT id FROM users WHERE sessionId='" + req.params.sessionId + "')", (err, result) => {
-    if(err){
-      console.log(err);
-      return false;
-    }
-    
-    if(result.length === 0){
-      return false;
-    }
-    else{
-      return true;
-    }
-  });
-}
-
 
 send = function(res, code, success, message, data){
   res.status(code);
