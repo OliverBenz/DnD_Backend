@@ -65,6 +65,8 @@ sanitize = function(req, data){
     }
     // If INT -> Check if really INT
     else{
+      console.log(data[key]);
+      console.log(parseInt(data[key]));
       // If value is not equals to INT of value -> value includes char
       if(!(data[key] == parseInt(data[key]))) return false;
     }
