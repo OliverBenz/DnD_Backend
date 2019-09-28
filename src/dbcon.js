@@ -2,8 +2,8 @@
 var mysql = require('mysql');
 var dbconfig = {
   host: 'localhost',
-  user: 'root',
-  password: '',
+  user: 'dnd',
+  password: 'B71x!#rOWv$WH3&!2ltu43Y*nW3@7J',
   port: '3306',
   database: 'dnd'
 };
