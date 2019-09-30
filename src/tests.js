@@ -53,7 +53,7 @@ exports.checkData = function(req, res, next){
   }
 }
 
-sanitize = function(req, data){
+sanitize = function(data){
   for(let key in data){
     // If String -> Check for cautionStrings
     if(! intValues.includes(key)){
@@ -65,8 +65,6 @@ sanitize = function(req, data){
     }
     // If INT -> Check if really INT
     else{
-      console.log(data[key]);
-      console.log(parseInt(data[key]));
       // If value is not equals to INT of value -> value includes char
       if(!(data[key] == parseInt(data[key]))) return false;
     }
