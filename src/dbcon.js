@@ -1,20 +1,20 @@
 // MySQL Setup
 var mysql = require('mysql');
-var dbconfig = {
- host: 'localhost',
- user: 'dnd',
- password: 'B71x!#rOWv$WH3&!2ltu43Y*nW3@7J',
- port: '3306',
- database: 'dnd'
-};
-
 // var dbconfig = {
-//   host: '172.17.0.1',
-//   user: 'dnd',
-//   password: 'B71x!#rOWv$WH3&!2ltu43Y*nW3@7J',
-//   port: '3306',
-//   database: 'dnd'
+//  host: 'localhost',
+//  user: 'dnd',
+//  password: 'B71x!#rOWv$WH3&!2ltu43Y*nW3@7J',
+//  port: '3306',
+//  database: 'dnd'
 // };
+
+var dbconfig = {
+  host: '172.17.0.1',
+  user: 'dnd',
+  password: 'B71x!#rOWv$WH3&!2ltu43Y*nW3@7J',
+  port: '3306',
+  database: 'dnd'
+};
 var connection;
 
 handleDisconnect = function() {
