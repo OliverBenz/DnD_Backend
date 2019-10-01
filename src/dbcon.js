@@ -17,13 +17,16 @@ var dbconfig = {
 // };
 var connection;
 
-function handleDisconnect() {
+handleDisconnect = function() {
   connection = mysql.createConnection(dbconfig);
 
   connection.connect(function(err) {
     if(err) {
       console.log('error when connecting to db:', err);
       setTimeout(handleDisconnect, 2000);
+    }
+    else{
+      return connection;
     }
   });
 

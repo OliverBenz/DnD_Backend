@@ -1,6 +1,6 @@
 var connection = require("./dbcon.js").connection;
 
-var checkStrings = [
+var cautionStrings = [
   "'",
   '"',
   "SELECT",
@@ -55,18 +55,20 @@ exports.checkData = function(req, res, next){
 
 sanitize = function(data){
   for(let key in data){
-    // If String -> Check for cautionStrings
-    if(! intValues.includes(key)){
-      for(let i = 0; i < cautionStrings.length; i++){
-        if(data[key].toUpperCase().includes(cautionStrings[i].toUpperCase())){
-          return false;
+    if(data[key] != undefined){
+      // If String -> Check for cautionStrings
+      if(! intValues.includes(key)){
+        for(let i = 0; i < cautionStrings.length; i++){
+          if(data[key].toUpperCase().includes(cautionStrings[i].toUpperCase())){
+            return false;
+          }
         }
       }
-    }
-    // If INT -> Check if really INT
-    else{
-      // If value is not equals to INT of value -> value includes char
-      if(!(data[key] == parseInt(data[key]))) return false;
+      // If INT -> Check if really INT
+      else{
+        // If value is not equals to INT of value -> value includes char
+        if(!(data[key] == parseInt(data[key]))) return false;
+      }
     }
   }
   return true;
