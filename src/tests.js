@@ -13,6 +13,7 @@ var cautionStrings = [
 
 var intValues = [
   "id",
+  "spellId",
   "offset",
   "limit",
   "copper",
