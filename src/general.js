@@ -75,7 +75,7 @@ exports.getSpellsLimit = function(req, res){
 
 // Get Spell Specific
 exports.getSpellSpec = function(req, res){
-  connection.query("SELECT * FROM spells WHERE id = " + req.params.id, (err, result) => {
+  connection.query("SELECT s.*, sc.name FROM spells s INNER JOIN schools sc ON s.school = sc.id WHERE s.id = " + req.params.id, (err, result) => {
     if(err){
       console.log(err);
 
