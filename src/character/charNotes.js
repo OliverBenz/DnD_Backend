@@ -1,74 +1,57 @@
-var connection = require("../dbcon.js").connection;
+var db = require("../dbcon.js");
 
 // Get all Notes
 exports.getCharNotes = function(req, res){
-  connection.query("SELECT id, date, note FROM notes WHERE charId = (SELECT id FROM characters WHERE charString = '" + req.params.charString + "') ORDER BY date DESC", (err, result) => {
-    if(err){
-      console.log(err);
-
+  db.query("SELECT id, date, note FROM notes WHERE charId = (SELECT id FROM characters WHERE charString = '" + req.params.charString + "') ORDER BY date DESC", (result) => {
+    if(result["success"]) res.status(200);
+    else{
       res.status(500);
-      res.set('Content-Type', 'application/json');
-      res.send(JSON.stringify({ "success": false, "message": "Could not get Notes" }));
+      result["message"] = "Could not get notes";
     }
-
-    res.status(200);
-    res.set('Content-Type', 'application/json');
-    res.send(JSON.stringify({ "success": true, "data": result }));
+    res.send(JSON.stringify(result));
   });
 }
 
 // Post new Note
 exports.postCharNotes = function(req, res){
-  connection.query("INSERT INTO notes VALUES (0, (SELECT id FROM characters WHERE charString = '" + req.params.charString + "'), '" + req.body.date + "', '" + req.body.note + "')", (err, result) => {
-    if(err){
-      console.log(err);
-
+  db.query("INSERT INTO notes VALUES (0, (SELECT id FROM characters WHERE charString = '" + req.params.charString + "'), '" + req.body.date + "', '" + req.body.note + "')", (result) => {
+    let data = {};
+    if(result["success"]) {
+      res.status(200);
+      data = {
+        "id": result.data.insertId,
+        "date": req.body.date.split(" ")[0],
+        "note": req.body.note
+      }
+    }
+    else{
       res.status(500);
-      res.set('Content-Type', 'application/json');
-      res.send(JSON.stringify({ "success": false, "message": "Could not add note" }));
+      result["message"] = "Could not add note";
     }
-
-    res.status(200);
-    res.set('Content-Type', 'application/json');
-    let data = {
-      "id": result.insertId,
-      "date": req.body.date.split(" ")[0],
-      "note": req.body.note
-    }
-    res.send(JSON.stringify({ "success": true, "data": data }));
+    res.send(JSON.stringify(result));
   });
 }
 
 // Update existing Note
 exports.patchCharNotes = function(req, res){
-  connection.query("UPDATE notes SET note='" + req.body.note + "' WHERE id = " + req.body.id + " AND charId = (SELECT id FROM characters WHERE charString = '" + req.params.charString + "')", (err, result) => {
-    if(err){
-      console.log(err);
-
+  db.query("UPDATE notes SET note='" + req.body.note + "' WHERE id = " + req.body.id + " AND charId = (SELECT id FROM characters WHERE charString = '" + req.params.charString + "')", (result) => {
+    if(result["success"]) res.status(200);
+    else{
       res.status(500);
-      res.set('Content-Type', 'application/json');
-      res.send(JSON.stringify({ "success": false, "message": "Could not update Note" }));
+      result["message"] = "Could not update note";
     }
-    
-    res.status(200);
-    res.set('Content-Type', 'application/json');
-    res.send(JSON.stringify({ "success": true, "message": "Successfully updated Note" }));
+    res.send(JSON.stringify(result));
   });
 }
 
 // Delete Note
 exports.delCharNotes = function(req, res){
-  connection.query("DELETE FROM notes WHERE id = " + req.body.id + " AND charId = (SELECT id FROM characters WHERE charString = '" + req.params.charString + "')", (err, result) => {
-    if(err){
-      console.log(err);
-
+  db.query("DELETE FROM notes WHERE id = " + req.body.id + " AND charId = (SELECT id FROM characters WHERE charString = '" + req.params.charString + "')", (result) => {
+    if(result["success"]) res.status(200);
+    else{
       res.status(500);
-      res.set('Content-Type', 'application/json');
-      res.send(JSON.stringify({ "success": false, "message": "Could not delete Note" }));
+      result["message"] = "Could not delete Note";
     }
-
-    res.status(200);
-    res.set('Content-Type', 'application/json');
-    res.send(JSON.stringify({ "success": true, "message": "Successfully deleted Note" }));
+    res.send(JSON.stringify(result));
   });
 }

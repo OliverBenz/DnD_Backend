@@ -1,54 +1,44 @@
-var connection = require("./dbcon.js").connection;
+var db = require("./dbcon.js");
 
 // Get Alignments
 exports.getAlignments = function(req, res){
-  connection.query("SELECT id, name FROM alignments", (err, result) =>{
-    if(err){
-      console.log(err);
-
-      res.status(500);
-      res.set('Content-Type', 'application/json');
-      res.send(JSON.stringify({ "success": false, "message": "Could not get alignments" }));      
+  db.query("SELECT id, name FROM alignments", (result) => {
+    if(result["success"]){
+      res.status(200);
     }
-
-    res.status(200);
-    res.set('Content-Type', 'application/json');
-    res.send(JSON.stringify({ "success": true, "data": result }));
+    else{
+      res.status(500);
+      result["message"] = "Could not get alignments";
+    }
+    res.send(JSON.stringify(result));
   });
 }
 
 
 // Get Backgrounds
 exports.getBackgrounds = function(req, res){
-  connection.query("SELECT id, name FROM backgrounds", (err, result) => {
-    if(err){
-      console.log(err);
+  db.query("SELECT id, name FROM backgrounds", (result) => {
+    if(result["success"]) res.status(200);
+    else{
       res.status(500);
-      res.set('Content-Type', 'application/json');
-      res.send(JSON.stringify({ "success": false, "message": "Could not get Backgrounds" }));
+      result["message"] = "Could not get Backgrounds";
     }
 
-    res.status(200);
-    res.set('Content-Type', 'application/json');
-    res.send(JSON.stringify({ "success": true, "data": result }));
+    res.send(JSON.stringify(result));
   });
 }
 
 
 // Get Spells
 exports.getSpells = function(req, res){
-  connection.query("SELECT s.id, s.name, s.level, s.range from spells s ORDER BY name ASC", (err, result) => {
-    if(err){
-      console.log(err);
-
+  db.query("SELECT s.id, s.name, s.level, s.range from spells s ORDER BY name ASC", (result) => {
+    if(result["success"]) res.status(200);
+    else{
       res.status(500);
-      res.set('Content-Type', 'application/json');
-      res.send(JSON.stringify({"success": false, "message": "Could not get Spells" }))
+      result["message"] = "Could not get Spells";
     }
 
-    res.status(200);
-    res.set('Content-Type', 'application/json');
-    res.send(JSON.stringify({ "success": true, "data": result }));
+    res.send(JSON.stringify(result));
   });
 }
 
@@ -57,36 +47,29 @@ exports.getSpellsLimit = function(req, res){
   let sql = "SELECT s.id, s.name, s.level, s.range from spells s ORDER BY name ASC LIMIT " + req.params.limit + " OFFSET " + req.params.offset;
   if(req.params.filter) sql = "SELECT s.id, s.name, s.level, s.range from spells s WHERE s.name LIKE '%" + req.params.filter + "%' ORDER BY name ASC LIMIT " + req.params.limit + " OFFSET " + req.params.offset;
 
-  connection.query(sql, (err, result) => {
-    if(err){
-      console.log(err);
-
+  db.query(sql, (result) => {
+    if(result["success"]) res.status(200)
+    else{
       res.status(500);
-      res.set('Content-Type', 'application/json');
-      res.send(JSON.stringify({"success": false, "message": "Could not get Spells" }))
+      result["message"] = "Coult not get Spells";
     }
 
-    res.status(200);
-    res.set('Content-Type', 'application/json');
-    res.send(JSON.stringify({ "success": true, "data": result }));
+    res.send(JSON.stringify(result));
   });
 }
 
 
 // Get Spell Specific
 exports.getSpellSpec = function(req, res){
-  connection.query("SELECT s.*, sc.name as schoolName FROM spells s INNER JOIN schools sc ON s.school = sc.id WHERE s.id = " + req.params.id, (err, result) => {
-    if(err){
-      console.log(err);
+  let sql = "SELECT s.*, sc.name as schoolName FROM spells s INNER JOIN schools sc ON s.school = sc.id WHERE s.id = " + req.params.id;
 
-      res.status(500);
-      res.set('Content-Type', 'application/json');
-      res.send(JSON.stringify({ "success": false, "message": "Could not get Spell Information" }));
-    }
+  db.query(sql, (result) => {
+    if(result["success"]) res.status(200);
     else{
-      res.status(200);
-      res.set('Content-Type', 'application/json');
-      res.send(JSON.stringify({ "success": true, "data": result }));
+      res.status(500);
+      result["message"] = "Could not get Spell Information";
     }
+
+    res.send(JSON.stringify(result))
   });
 }

@@ -1,57 +1,45 @@
-var connection = require("../dbcon.js").connection;
+var db = require("../dbcon.js");
 
 // Get Trackers
 exports.getCharTrackers = function(req, res){
-  connection.query("SELECT * FROM charTrackers WHERE charId = (SELECT id FROM characters WHERE charString = '" + req.params.charString + "')", (err, result) => {
-    if(err){
-      console.log(err);
-
-      send(res, 500, false, "Could not get Trackers", undefined);
+  db.query("SELECT * FROM charTrackers WHERE charId = (SELECT id FROM characters WHERE charString = '" + req.params.charString + "')", (result) => {
+    if(result["success"]) res.status(200);
+    else{
+      res.status(500);
+      result["message"] = "Could not get Trackers";
     }
-
-    send(res, 200, true, "", result);
+    res.send(JSON.stringify(result));
   });
 }
 
 exports.postCharTracker = function(req, res){
-  connection.query("INSERT INTO charTrackers VALUES (0, (SELECT id FROM characters WHERE charString = '" + req.params.charString + "'), '" + req.body.title + "', " + req.body.value + ", " + req.body.maxValue + ", " + req.body.minValue + ")", (err, result) => {
-    if(err){
-      console.log(err);
-
-      send(res, 500, false, "Could not add Tracker", undefined);
+  db.query("INSERT INTO charTrackers VALUES (0, (SELECT id FROM characters WHERE charString = '" + req.params.charString + "'), '" + req.body.title + "', " + req.body.value + ", " + req.body.maxValue + ", " + req.body.minValue + ")", (result) => {
+    let data = {};
+    if(result["success"]) {
+      res.status(200);
+      data = {
+        "id": result.insertId,
+        "title": req.body.title,
+        "value": req.body.value,
+        "maxValue": req.body.maxValue,
+        "minValue": req.body.minValue
+      }
     }
-
-    let data = {
-      "id": result.insertId,
-      "title": req.body.title,
-      "value": req.body.value,
-      "maxValue": req.body.maxValue,
-      "minValue": req.body.minValue
+    else{
+      res.status(500);
+      result["message"] = "Could not add Tracker";
     }
-    send(res, 200, true, "Successfully added Tracker", data)
+    res.send(JSON.stringify(result));
   });
 }
 
 exports.patchCharTracker = function(req, res){
-  connection.query("UPDATE charTracker SET value = " + req.body.value + " WHERE trackerId = " + req.body.id + " AND charId = (SELECT id FROM characters WHERE charString = " + req.params.charString + ")", (err, result) => {
-    if(err){
-      console.log(err);
-
-      send(res, 500, false, "Could not update Tracker", undefined);
+  db.query("UPDATE charTracker SET value = " + req.body.value + " WHERE trackerId = " + req.body.id + " AND charId = (SELECT id FROM characters WHERE charString = " + req.params.charString + ")", (result) => {
+    if(result["success"]) res.status(200);
+    else{
+      res.status(500);
+      result["message"] = "Could not update Tracker";
     }
-
-    send(res, 200, true, "Successfully added Tracker", undefined);
+    res.send(JSON.stringify(result));
   });
-}
-
-function send(res, status, success, message, data){
-  if(data === undefined) data = [];
-  
-  res.status(status);
-  res.set('Content-Type', 'application/json');
-  res.send(JSON.stringify({
-    "success": success,
-    "message": message,
-    "data": data
-  }));
 }

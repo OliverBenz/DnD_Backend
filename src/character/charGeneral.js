@@ -1,19 +1,19 @@
-var connection = require("../dbcon.js").connection;
+var db = require("../dbcon.js");
 
 // Get General Character Information
 exports.getCharGeneral = function(req, res){
-  connection.query("SELECT c.firstname, c.lastname, c.level, c.xp, a.name, c.background, c.age, c.height, weight FROM characters c INNER JOIN alignments a ON a.id = c.alignment WHERE c.charString='" + req.params.charString + "' AND c.userId = (SELECT id from users WHERE sessionId = '" + req.params.sessionId + "')", (err, result) => {
-    if(err){
-      console.log(err);
-
+  let sql = "SELECT c.firstname, c.lastname, c.level, c.xp, a.name, c.background, c.age, c.height, weight FROM characters c INNER JOIN alignments a ON a.id = c.alignment WHERE c.charString='" + req.params.charString + "' AND c.userId = (SELECT id from users WHERE sessionId = '" + req.params.sessionId + "')";
+  db.query(sql, (result) => {
+    if(result["success"]){
+      res.status(200);
+      result["data"] = result["data"][0];
+    }
+    else{
       res.status(500);
-      res.set('Content-Type', 'application/json');
-      res.send(JSON.stringify({ "success": false, "message": "Could not get Character Information" }));
+      result["message"] = "Coult not get Character Informamtion";
     }
 
-    res.status(200);
-    res.set('Content-Type', 'application/json');
-    res.send(JSON.stringify({ "success": true, "data": result[0]}));
+    res.send(JSON.stringify(result));
   });
 }
 

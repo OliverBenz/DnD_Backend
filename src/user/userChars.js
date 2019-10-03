@@ -1,15 +1,12 @@
-var connection = require("../dbcon.js").connection;
+var db = require("../dbcon.js");
 var bcrypt = require('bcryptjs');
 
 exports.getCharList = function(req, res){
-  connection.query("SELECT firstname, lastname, level, charString from characters WHERE userId = (SELECT id FROM users WHERE sessionId = '" + req.params.sessionId + "')", (err, result) => {
-    if(err){
-      console.log(err);
-    };
-
-    res.status(200);
-    res.set('Content-Type', 'application/json');
-    res.send(JSON.stringify({ "success": true, "data": result }));
+  db.query("SELECT firstname, lastname, level, charString from characters WHERE userId = (SELECT id FROM users WHERE sessionId = '" + req.params.sessionId + "')", (result) => {
+    if(result["success"]) res.status(200);
+    else res.status(500);
+    
+    res.send(JSON.stringify(result));
   });
 }
 
@@ -25,59 +22,41 @@ exports.postChar = function(req, res){
   sql += req.body.maxHealth + ", " + req.body.tempHealth + ", " + req.body.currentHealth + ", ";
   sql += req.body.copper + ", " + req.body.silver + ", " + req.body.electrum + ", " + req.body.gold + ", " + req.body.platinum + ")";
 
-  connection.query(sql, (err, result) => {
-    if(err){
-      if(err.errno === 1062){
-        // res.status()
-      }
-      else{
-        console.log(err);
-
-        res.status(409);
-        res.set('Content-Type', 'application/json');
-        res.send(JSON.stringify({ "success": false, "message": "Char already registered"}));
-      }
+  db.query(sql, (result) => {
+    if(result["success"]) res.status(200);
+    else{
+      res.status(500);
+      result["message"] = "Error";
     }
-
-    res.status(200);
-    res.set('Content-Type', 'application/json');
-    res.send(JSON.stringify({ "success": true, "data": { "charString": charString }}));
+    res.send(JSON.stringify(result));
   });
 }
 
 exports.delChar = function(req, res){
   // Check password
-    connection.query("SELECT password FROM users WHERE sessionId='" + req.params.sessionId + "'", (err, result) => {
-    if(err){
-      console.log(err);
-    };
-
-    if(result.length === 0){
-      res.status(401);
-      res.set('Content-Type', 'application/json');
-      res.send(JSON.stringify({ "success": false, "message": "Invalid SessionId"}));
-    }
-    else{
-      // If password correct
-      if(bcrypt.compareSync(req.body.password, result[0]["password"])){
-        connection.query('DELETE FROM characters WHERE charString = "' + req.body.charString + '" AND userId = (SELECT id FROM users WHERE sessionId = "' + req.params.sessionId + '")', (err, result) => {
-          if(err){
-            console.log(err);
-            res.status(500);
-            res.set('Content-Type', 'application/json');
-            res.send(JSON.stringify({ "success": false, "message": "Could not delete Character" }));
+    db.query("SELECT password FROM users WHERE sessionId='" + req.params.sessionId + "'", (password) => {
+      if(password["success"]){
+        if(password["data"].length === 0){
+          res.status(401);
+          res.send(JSON.stringify({ "success": false, "message": "Invalid sessionId" }));
+        }
+        else{
+          // If password correct
+          if(bcrypt.compareSync(req.body.password, password["data"][0]["password"])){
+            db.query('DELETE FROM characters WHERE charString = "' + req.body.charString + '" AND userId = (SELECT id FROM users WHERE sessionId = "' + req.params.sessionId + '")', (result) => {
+              if(result["success"]) res.status(200);
+              else{
+                res.status(500);
+                result["message"] = "Could not delete character";
+              }
+              res.send(JSON.stringify(result));
+            });        
           }
-
-          res.status(200);
-          res.set('Content-Type', 'application/json');
-          res.send(JSON.stringify({ "success": true, "message": "Deletion successful" }));
-        });        
+          else{
+            res.status(401);
+            res.send(JSON.stringify({ "success": false, "message": "Invalid password" }));
+          }
+        }
       }
-      else{
-        res.status(401);
-        res.set('Content-Type', 'application/json');
-        res.send(JSON.stringify({ "success": false, "message": "Invalid password" }));
-      }
-    }
   });
 }

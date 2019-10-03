@@ -11,6 +11,11 @@ var genRouter = express.Router();
 var charRouter = express.Router();
 var userRouter = express.Router();
 
+app.use((req, res, next) => {
+  res.set('Content-Type', 'application/json');
+  next();
+});
+
 app.use('/dnd/general', genRouter);
 app.use('/dnd/character', charRouter);
 app.use('/dnd/user', userRouter);

@@ -1,19 +1,17 @@
-var connection = require("../dbcon.js").connection;
+var db = require("../dbcon.js");
 
 // Get Money
 exports.getCharMoney = function(req, res){
-  connection.query("SELECT copper, silver, electrum, gold, platinum from characters WHERE charString = '" + req.params.charString + "' AND userId = (SELECT id FROM users WHERE sessionId = '" + req.params.sessionId + "')", (err, result) => {
-    if(err){
-      console.log(err);
-
-      res.status(500);
-      res.set('Content-Type', 'application/json');
-      res.send(JSON.stringify({ "success": false, "message": "Could not get Character Money" }));
+  db.query("SELECT copper, silver, electrum, gold, platinum from characters WHERE charString = '" + req.params.charString + "' AND userId = (SELECT id FROM users WHERE sessionId = '" + req.params.sessionId + "')", (result) => {
+    if(result["success"]){
+      res.status(200);
+      result["data"] = result["data"][0];
     }
-
-    res.status(200);
-    res.set('Content-Type', 'application/json');
-    res.send(JSON.stringify({ "success": true, "data": result[0]}));
+    else{
+      res.status(500);
+      result["message"] = "Could not get Character Money";
+    }
+    res.send(JSON.stringify(result));
   });
 }
 
@@ -29,13 +27,12 @@ exports.patchCharMoney = function(req, res){
 
   sql += " WHERE charString = '" + req.params.charString + "'";
 
-  connection.query(sql, (err, result) => {
-    if(err){
-      console.log(err);
+  db.query(sql, (result) => {
+    if(result["success"]) res.status(200);
+    else{
+      res.status(500);
+      result["message"] = "Could not update character money";
     }
-
-    res.status(200);
-    res.set('Content-Type', 'application/json');
-    res.send(JSON.stringify({ "success": true, "message": "Update successful" }));
+    res.send(JSON.stringify(result));
   });
 }

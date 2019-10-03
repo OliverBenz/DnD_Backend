@@ -1,4 +1,4 @@
-var connection = require("./dbcon.js").connection;
+var db = require("./dbcon.js");
 
 var cautionStrings = [
   "'",
@@ -31,18 +31,23 @@ exports.checkData = function(req, res, next){
   if(sanitize(req.params) && sanitize(req.body)){
     // If character/user check necessary and OK
     if(req.params.sessionId && req.params.charString){
-      connection.query("SELECT id FROM characters WHERE charString='" + req.params.charString + "' AND userId = (SELECT id FROM users WHERE sessionId='" + req.params.sessionId + "')", (err, result) => {
-        if(err){
-          console.log(err);
-          send(res, 500, false, "Could not check character", []);
-        }
-
-        if(result.length === 0){
-          send(res, 500, false, "sessionId and charString not connected", []);
+      let sql = "SELECT id FROM characters WHERE charString='" + req.params.charString + "' AND userId = (SELECT id FROM users WHERE sessionId='" + req.params.sessionId + "')";
+      db.getQuery(sql, (result) => {
+        if(result["success"]){
+          if(result["data"].length === 0){
+            res.status(500);
+            result["message"] = "sessionId and charString not connected";
+          }
+          else{
+            next();
+          }
         }
         else{
-          next();
+          res.status(500);
+          result["message"] = "Could not check character";
         }
+
+        res.send(result);
       });
     }
     else{
