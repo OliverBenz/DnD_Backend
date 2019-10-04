@@ -23,7 +23,14 @@ var intValues = [
   "platinum",
   "tempHealth",
   "currentHealth",
-  "maxHealth"
+  "maxHealth",
+  "level",
+  "xp",
+  "background",
+  "alignment",
+  "age",
+  "height",
+  "weight"
 ];
 
 exports.checkData = function(req, res, next){
