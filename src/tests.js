@@ -32,7 +32,7 @@ exports.checkData = function(req, res, next){
     // If character/user check necessary and OK
     if(req.params.sessionId && req.params.charString){
       let sql = "SELECT id FROM characters WHERE charString='" + req.params.charString + "' AND userId = (SELECT id FROM users WHERE sessionId='" + req.params.sessionId + "')";
-      db.getQuery(sql, (result) => {
+      db.query(sql, (result) => {
         if(result["success"]){
           if(result["data"].length === 0){
             res.status(500);

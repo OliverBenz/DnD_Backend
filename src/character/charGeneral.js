@@ -19,7 +19,7 @@ exports.getCharGeneral = function(req, res){
 
 // Update General Character Information
 exports.patchCharGeneral = function(req, res){
-  connection.query("UPDATE characters SET xp", (err, result) => {
+  db.query("UPDATE characters SET xp", (result) => {
     if(err){
       console.log(err);
     }
