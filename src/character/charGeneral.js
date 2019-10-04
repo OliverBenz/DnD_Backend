@@ -2,7 +2,8 @@ var db = require("../dbcon.js");
 
 // Get General Character Information
 exports.getCharGeneral = function(req, res){
-  let sql = "SELECT c.firstname, c.lastname, c.level, c.xp, a.name, c.background, c.age, c.height, weight FROM characters c INNER JOIN alignments a ON a.id = c.alignment WHERE c.charString='" + req.params.charString + "' AND c.userId = (SELECT id from users WHERE sessionId = '" + req.params.sessionId + "')";
+  let sql = `SELECT c.firstname, c.lastname, c.level, c.xp, a.name, c.background, c.age, c.height, weight FROM characters c INNER JOIN alignments a ON a.id = c.alignment WHERE c.charString='${req.params.charString}' AND c.userId = (SELECT id from users WHERE sessionId = '${req.params.sessionId}')`;
+  
   db.query(sql, (result) => {
     if(result["success"]){
       res.status(200);
@@ -10,7 +11,7 @@ exports.getCharGeneral = function(req, res){
     }
     else{
       res.status(500);
-      result["message"] = "Coult not get Character Informamtion";
+      result["message"] = "Coult not get Character Information";
     }
 
     res.send(JSON.stringify(result));
@@ -19,7 +20,7 @@ exports.getCharGeneral = function(req, res){
 
 // Update General Character Information
 exports.patchCharGeneral = function(req, res){
-  db.query("UPDATE characters SET xp", (result) => {
+  db.query(`UPDATE characters SET xp`, (result) => {
     if(err){
       console.log(err);
     }
