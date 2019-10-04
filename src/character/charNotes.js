@@ -15,14 +15,14 @@ exports.getCharNotes = function(req, res){
 // Post new Note
 exports.postCharNotes = function(req, res){
   db.query("INSERT INTO notes VALUES (0, (SELECT id FROM characters WHERE charString = '" + req.params.charString + "'), '" + req.body.date + "', '" + req.body.note + "')", (result) => {
-    let data = {};
+    console.log()
     if(result["success"]) {
       res.status(200);
-      data = {
+      result["data"] = {
         "id": result.data.insertId,
         "date": req.body.date.split(" ")[0],
         "note": req.body.note
-      }
+      };
     }
     else{
       res.status(500);
