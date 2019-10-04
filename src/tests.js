@@ -30,7 +30,10 @@ var intValues = [
   "alignment",
   "age",
   "height",
-  "weight"
+  "weight",
+  "trackValue",
+  "trackMax",
+  "trackMin"
 ];
 
 exports.checkData = function(req, res, next){

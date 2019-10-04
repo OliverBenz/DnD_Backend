@@ -20,9 +20,9 @@ exports.postCharTracker = function(req, res){
       data = {
         "id": result.insertId,
         "title": req.body.title,
-        "value": req.body.value,
-        "maxValue": req.body.maxValue,
-        "minValue": req.body.minValue
+        "value": req.body.trackValue,
+        "maxValue": req.body.trackMax,
+        "minValue": req.body.trackMin
       }
     }
     else{
@@ -34,7 +34,7 @@ exports.postCharTracker = function(req, res){
 }
 
 exports.patchCharTracker = function(req, res){
-  db.query("UPDATE charTracker SET value = " + req.body.value + " WHERE trackerId = " + req.body.id + " AND charId = (SELECT id FROM characters WHERE charString = " + req.params.charString + ")", (result) => {
+  db.query("UPDATE charTracker SET value = " + req.body.trackValue + " WHERE trackerId = " + req.body.id + " AND charId = (SELECT id FROM characters WHERE charString = " + req.params.charString + ")", (result) => {
     if(result["success"]) res.status(200);
     else{
       res.status(500);
