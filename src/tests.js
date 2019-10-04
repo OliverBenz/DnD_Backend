@@ -10,7 +10,7 @@ var cautionStrings = [
   "TABLE_SCHEMA",
   "TABLE_NAME"
 ];
-
+// test
 var intValues = [
   "id",
   "spellId",
