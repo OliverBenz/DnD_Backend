@@ -37,6 +37,7 @@ exports.checkData = function(req, res, next){
           if(result["data"].length === 0){
             res.status(500);
             result["message"] = "sessionId and charString not connected";
+            res.send(JSON.stringify(result));
           }
           else{
             next();
@@ -45,9 +46,8 @@ exports.checkData = function(req, res, next){
         else{
           res.status(500);
           result["message"] = "Could not check character";
+          res.send(JSON.stringify(result));
         }
-
-        res.send(result);
       });
     }
     else{
@@ -55,7 +55,8 @@ exports.checkData = function(req, res, next){
     }
   }
   else{
-    send(res, 500, false, "Data sanitizing error", []);
+    res.status(500);
+    res.send(JSON.stringify({ "success": false, "message": "Data sanitizing error" }));
   }
 }
 
@@ -78,10 +79,4 @@ sanitize = function(data){
     }
   }
   return true;
-}
-
-send = function(res, code, success, message, data){
-  res.status(code);
-  res.set('Content-Type', 'application/json');
-  res.send(JSON.stringify({ "success": success, "message": message, "data": data }));
 }

@@ -29,7 +29,9 @@ exports.query = function(sql, callback){
         console.log(err);
         callback({"success": false, "message": ""});
       }
-      callback({"success": true, "data": result});
+      else{
+        callback({"success": true, "data": result});
+      }
     });
   });
 }
