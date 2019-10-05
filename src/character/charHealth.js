@@ -3,16 +3,18 @@ var db = require("../dbcon.js");
 
 // Get Health
 exports.getCharHealth = function(req, res){
-  let sql = `SELECT maxHealth, currentHealth, tempHealth from characters WHERE charString = '${req.params.charString}' AND userId = (SELECT id FROM users WHERE sessionId = '${req.params.sessionId}')`;
+  const { charString, sessionId } = req.params;
+
+  let sql = `SELECT maxHealth, currentHealth, tempHealth from characters WHERE charString = '${charString}' AND userId = (SELECT id FROM users WHERE sessionId = '${sessionId}')`;
   
   db.query(sql, (result) => {
-    if(result["success"]){
+    if(result.success){
       res.status(200);
-      result["data"] = result["data"][0];
+      result.data = result.data[0];
     }
     else{
       res.status(500);
-      result["message"] = "Could not get Character Health";
+      result.message = "Could not get Character Health";
     }
 
     res.send(JSON.stringify(result));
@@ -21,11 +23,13 @@ exports.getCharHealth = function(req, res){
 
 // Update Health
 exports.patchCharHealth = function(req, res){
+  const { maxHealth, currentHealth, tempHealth } = req.body;
+
   let sql = "UPDATE characters SET id=id";
 
-  sql += req.body.maxHealth !== undefined ? `, maxHealth = ${req.body.maxHealth}` : "";
-  sql += req.body.currentHealth !== undefined ? `, currentHealth = ${req.body.currentHealth}` : "";
-  sql += req.body.tempHealth !== undefined ? `, tempHealth = ${req.body.tempHealth}` : "";
+  sql += maxHealth !== undefined ? `, maxHealth = ${maxHealth}` : "";
+  sql += currentHealth !== undefined ? `, currentHealth = ${currentHealth}` : "";
+  sql += tempHealth !== undefined ? `, tempHealth = ${tempHealth}` : "";
 
   // if(req.body.maxHealth !== undefined) sql += `, maxHealth = ${req.body.maxHealth}`;
   // if(req.body.currentHealth !== undefined) sql += `, currentHealth = ${req.body.currentHealth}`;
@@ -34,10 +38,10 @@ exports.patchCharHealth = function(req, res){
   sql += ` WHERE charString = '${req.params.charString}'`;
 
   db.query(sql, (result) => {
-    if(result["success"]) res.status(200);
+    if(result.success) res.status(200);
     else{
       res.status(500);
-      result["message"] = "Could not update character health";
+      result.message = "Could not update character health";
     }
 
     res.send(JSON.stringify(result));

@@ -27,10 +27,10 @@ exports.query = function(sql, callback){
 
       if(err){
         console.log(err);
-        callback({"success": false, "message": ""});
+        callback({success: false, message: ""});
       }
       else{
-        callback({"success": true, "data": result});
+        callback({success: true, data: result});
       }
     });
   });

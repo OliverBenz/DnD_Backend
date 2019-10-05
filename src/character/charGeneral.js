@@ -2,16 +2,18 @@ var db = require("../dbcon.js");
 
 // Get General Character Information
 exports.getCharGeneral = function(req, res){
-  let sql = `SELECT c.firstname, c.lastname, c.level, c.xp, a.name, c.background, c.age, c.height, weight FROM characters c INNER JOIN alignments a ON a.id = c.alignment WHERE c.charString='${req.params.charString}' AND c.userId = (SELECT id from users WHERE sessionId = '${req.params.sessionId}')`;
+  const { charString, sessionId } = req.params;
+
+  let sql = `SELECT c.firstname, c.lastname, c.level, c.xp, a.name, c.background, c.age, c.height, weight FROM characters c INNER JOIN alignments a ON a.id = c.alignment WHERE c.charString='${charString}' AND c.userId = (SELECT id from users WHERE sessionId = '${sessionId}')`;
   
   db.query(sql, (result) => {
-    if(result["success"]){
+    if(result.success){
       res.status(200);
-      result["data"] = result["data"][0];
+      result.data = result.data[0];
     }
     else{
       res.status(500);
-      result["message"] = "Coult not get Character Information";
+      result.message = "Coult not get Character Information";
     }
 
     res.send(JSON.stringify(result));

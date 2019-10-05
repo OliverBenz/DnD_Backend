@@ -1,4 +1,5 @@
 var db = require("./dbcon.js");
+var bcrypt = require('bcryptjs');
 
 var cautionStrings = [
   "'",
@@ -43,10 +44,10 @@ exports.checkData = function(req, res, next){
     if(req.params.sessionId && req.params.charString){
       let sql = "SELECT id FROM characters WHERE charString='" + req.params.charString + "' AND userId = (SELECT id FROM users WHERE sessionId='" + req.params.sessionId + "')";
       db.query(sql, (result) => {
-        if(result["success"]){
-          if(result["data"].length === 0){
+        if(result.success){
+          if(result.data.length === 0){
             res.status(500);
-            result["message"] = "sessionId and charString not connected";
+            result.message = "sessionId and charString not connected";
             res.send(JSON.stringify(result));
           }
           else{
@@ -55,7 +56,7 @@ exports.checkData = function(req, res, next){
         }
         else{
           res.status(500);
-          result["message"] = "Could not check character";
+          result.message = "Could not check character";
           res.send(JSON.stringify(result));
         }
       });
@@ -66,7 +67,7 @@ exports.checkData = function(req, res, next){
   }
   else{
     res.status(500);
-    res.send(JSON.stringify({ "success": false, "message": "Data sanitizing error" }));
+    res.send(JSON.stringify({ success: false, message: "Data sanitizing error" }));
   }
 }
 
@@ -89,4 +90,8 @@ sanitize = function(data){
     }
   }
   return true;
+}
+
+checkToken = function(email, sessionId, token){
+  return bcrypt.compareSync(`${email}:${sessionId}`, token) ? true : false;
 }

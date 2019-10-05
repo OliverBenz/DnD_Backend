@@ -2,14 +2,15 @@ var db = require("../dbcon.js");
 
 // Get Money
 exports.getCharMoney = function(req, res){
-  db.query(`SELECT copper, silver, electrum, gold, platinum from characters WHERE charString = '${req.params.charString}' AND userId = (SELECT id FROM users WHERE sessionId = '${req.params.sessionId}')`, (result) => {
-    if(result["success"]){
+  const { charString, sessionId } = req.params;
+  db.query(`SELECT copper, silver, electrum, gold, platinum from characters WHERE charString = '${charString}' AND userId = (SELECT id FROM users WHERE sessionId = '${sessionId}')`, (result) => {
+    if(result.success){
       res.status(200);
-      result["data"] = result["data"][0];
+      result.data = result.data[0];
     }
     else{
       res.status(500);
-      result["message"] = "Could not get Character Money";
+      result.message = "Could not get Character Money";
     }
     res.send(JSON.stringify(result));
   });
@@ -17,13 +18,15 @@ exports.getCharMoney = function(req, res){
 
 // Update Money
 exports.patchCharMoney = function(req, res){
+  const { copper, silver, electrum, gold, platinum } = req.body;
+
   let sql = "UPDATE characters SET id=id"
 
-  sql += req.body.copper !== undefined ? `, copper = ${req.body.copper}` : "";
-  sql += req.body.silver !== undefined ? `, silver = ${req.body.silver}` : "";
-  sql += req.body.electrum !== undefined ? `, electrum = ${req.body.electrum}` : "";
-  sql += req.body.gold !== undefined ? `, gold = ${req.body.gold}` : "";
-  sql += req.body.platinum !== undefined ? `, platinum = ${req.body.platinum}` : "";
+  sql += copper !== undefined ? `, copper = ${copper}` : "";
+  sql += silver !== undefined ? `, silver = ${silver}` : "";
+  sql += electrum !== undefined ? `, electrum = ${electrum}` : "";
+  sql += gold !== undefined ? `, gold = ${gold}` : "";
+  sql += platinum !== undefined ? `, platinum = ${platinum}` : "";
 
   // if(req.body.copper !== undefined) sql += ", copper = " + req.body.copper;
   // if(req.body.silver !== undefined) sql += ", silver = " + req.body.silver;
@@ -34,10 +37,10 @@ exports.patchCharMoney = function(req, res){
   sql += ` WHERE charString = '${req.params.charString}'`;
 
   db.query(sql, (result) => {
-    if(result["success"]) res.status(200);
+    if(result.success) res.status(200);
     else{
       res.status(500);
-      result["message"] = "Could not update character money";
+      result.message = "Could not update character money";
     }
     res.send(JSON.stringify(result));
   });
