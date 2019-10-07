@@ -75,7 +75,7 @@ charRouter.delete('/spells/:charString/:spellId', checkData, (req, res) => charS
 charRouter.get('/notes/:charString', checkData, (req, res) => charNotes.getCharNotes(req, res));
 charRouter.post('/notes/:charString', checkData, (req, res) => charNotes.postCharNotes(req, res));
 charRouter.patch('/notes/:charString', checkData, (req, res) => charNotes.patchCharNotes(req, res));
-charRouter.delete('/notes/:charString', checkData, (req, res) => charNotes.delCharNotes(req, res));
+charRouter.delete('/notes/:charString/:id', checkData, (req, res) => charNotes.delCharNotes(req, res));
 
 // Character Trackers
 charRouter.get('/trackers/:charString', checkData, (req, res) => charTrackers.getCharTrackers(req, res));

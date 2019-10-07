@@ -50,7 +50,9 @@ exports.patchCharNotes = function(req, res){
 
 // Delete Note
 exports.delCharNotes = function(req, res){
-  db.query(`DELETE FROM notes WHERE id = ${req.body.id} AND charId = (SELECT id FROM characters WHERE charString = '${req.params.charString}')`, (result) => {
+  const { id, charString } = req.params;
+
+  db.query(`DELETE FROM notes WHERE id = ${id} AND charId = (SELECT id FROM characters WHERE charString = '${charString}')`, (result) => {
     if(result.success) res.status(200);
     else{
       res.status(500);
