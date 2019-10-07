@@ -50,7 +50,9 @@ exports.postCharSpell = function(req, res){
 
 // Delete Spell from Char
 exports.delCharSpell = function(req, res){
-  db.query(`DELETE FROM charSpells WHERE characterId = (SELECT id FROM characters WHERE charString = '${req.params.charString}') AND spellId = ${req.body.spellId}`, (result) => {
+  const { charString, spellId } = req.params;
+  
+  db.query(`DELETE FROM charSpells WHERE characterId = (SELECT id FROM characters WHERE charString = '${charString}') AND spellId = ${spellId}`, (result) => {
     if(result.success) {
       res.status(200);
       result.data = false;
