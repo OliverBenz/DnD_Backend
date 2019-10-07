@@ -1,5 +1,6 @@
 var db = require("./dbcon.js");
 var bcrypt = require('bcryptjs');
+var atob = require("atob");
 
 var cautionStrings = [
   "'",
@@ -9,7 +10,8 @@ var cautionStrings = [
   ";",
   "SLEEP()",
   "TABLE_SCHEMA",
-  "TABLE_NAME"
+  "TABLE_NAME",
+  "*"
 ];
 // test
 var intValues = [
@@ -37,38 +39,86 @@ var intValues = [
   "trackMin"
 ];
 
-exports.checkData = function(req, res, next){
-  // If params and body values are OK
+
+// Called Functions
+exports.checkSanitize = function(req, res, next){
   if(sanitize(req.params) && sanitize(req.body)){
-    // If character/user check necessary and OK
-    if(req.params.sessionId && req.params.charString){
-      let sql = "SELECT id FROM characters WHERE charString='" + req.params.charString + "' AND userId = (SELECT id FROM users WHERE sessionId='" + req.params.sessionId + "')";
-      db.query(sql, (result) => {
-        if(result.success){
-          if(result.data.length === 0){
-            res.status(500);
-            result.message = "sessionId and charString not connected";
-            res.send(JSON.stringify(result));
-          }
-          else{
-            next();
-          }
-        }
-        else{
-          res.status(500);
-          result.message = "Could not check character";
-          res.send(JSON.stringify(result));
-        }
-      });
+    next();
+  }
+  else{
+    res.status(500);
+    res.send(JSON.stringify({ success: false, message: "Data sanitizing error" }));
+  }
+}
+
+exports.checkData = async function(req, res, next){
+  if(sanitize(req.params) && sanitize(req.body)){
+    if(await checkSessionId(req.headers.authorization)){
+      if(req.params.charString === undefined || await checkUserChar(req.headers.authorization, req.params.charString)){
+        next();
+      }
+      else{
+        res.status(401);
+        res.send(JSON.stringify({ success: false, message: "Invalid character String for User" }));
+      }
     }
     else{
-      next();
+      res.status(401);
+      res.send(JSON.stringify({ success: false, message: "Unauthorized Access" }));
+      // Auth error 401
     }
   }
   else{
     res.status(500);
     res.send(JSON.stringify({ success: false, message: "Data sanitizing error" }));
   }
+}
+
+
+// Testing Functions
+checkSessionId = function(token){
+  const email = atob(token.split(" ")[1]).split(":")[0];
+  const sessionId = atob(token.split(" ")[1]).split(":")[1];
+
+  let sql = `SELECT id FROM users WHERE email = '${email}' AND sessionId = '${sessionId}'`;
+  
+  return new Promise(resolve => {
+    db.query(sql, (result) => {
+      if(result.success){
+        if(result.data.length === 1){
+          resolve(true);
+        }
+        else{
+          resolve(false);
+        }
+      }
+      else{
+        resolve(false);
+      }
+    });  
+  });
+}
+
+checkUserChar = function(token, charString){
+  const sessionId = atob(token.split(" ")[1]).split(":")[1];
+
+  let sql = `SELECT id FROM characters WHERE charString = '${charString}' AND userId = (SELECT id FROM users WHERE sessionId = '${sessionId}')`;
+  
+  return new Promise(resolve => {
+    db.query(sql, (result) => {
+      if(result.success){
+        if(result.data.length === 1){
+          resolve(true);
+        }
+        else{
+          resolve(false);
+        }
+      }
+      else{
+        resolve(false);
+      }
+    });
+  });
 }
 
 sanitize = function(data){
@@ -90,8 +140,4 @@ sanitize = function(data){
     }
   }
   return true;
-}
-
-checkToken = function(email, sessionId, token){
-  return bcrypt.compareSync(`${email}:${sessionId}`, token) ? true : false;
 }

@@ -1,8 +1,15 @@
 var db = require("../dbcon.js");
 var bcrypt = require('bcryptjs');
+var atob = require("atob");
+
+function getSessionId(token){
+  return atob(token.split(" ")[1]).split(":")[1];
+}
 
 exports.getCharList = function(req, res){
-  db.query("SELECT firstname, lastname, level, charString from characters WHERE userId = (SELECT id FROM users WHERE sessionId = '" + req.params.sessionId + "')", (result) => {
+  const sessionId = getSessionId(req.headers.authorization);
+
+  db.query(`SELECT firstname, lastname, level, charString from characters WHERE userId = (SELECT id FROM users WHERE sessionId = '${sessionId}')`, (result) => {
     if(result.success) res.status(200);
     else res.status(500);
     
@@ -11,10 +18,11 @@ exports.getCharList = function(req, res){
 }
 
 exports.postChar = function(req, res){
+  const sessionId = getSessionId(req.headers.authorization);
   const { firstname, lastname, level, xp, alignment, background, age, height, weight, maxHealth, tempHealth, currentHealth, copper, silver, electrum, gold, platinum } = req.body;
   let charString = bcrypt.hashSync(String(Math.random()) , 12).substring(5, 20);
 
-  let sql = `INSERT INTO characters VALUES (0, '${charString}', '${firstname}', '${lastname}', ${level}, ${xp}, 
+  let sql = `INSERT INTO characters VALUES (0, '${charString}', (SELECT id FROM users WHERE sessionId = '${sessionId}'), '${firstname}', '${lastname}', ${level}, ${xp}, 
   ${alignment}, '${background}', ${age}, ${height}, ${weight}, 
   ${maxHealth}, ${tempHealth}, ${currentHealth}, 
   ${copper}, ${silver}, ${electrum}, ${gold}, ${platinum})`;
@@ -40,8 +48,9 @@ exports.postChar = function(req, res){
 }
 
 exports.delChar = function(req, res){
+  const sessionId = getSessionId(req.headers.authorization);
   // Check password
-    db.query(`SELECT password FROM users WHERE sessionId = '${req.params.sessionId}'`, (password) => {
+    db.query(`SELECT password FROM users WHERE sessionId = '${sessionId}'`, (password) => {
       if(password.success){
         if(password.data.length === 0){
           res.status(401);
@@ -50,7 +59,7 @@ exports.delChar = function(req, res){
         else{
           // If password correct
           if(bcrypt.compareSync(req.body.password, password.data[0]["password"])){
-            db.query(`DELETE FROM characters WHERE charString = '${req.body.charString}' AND userId = (SELECT id FROM users WHERE sessionId = '${req.params.sessionId}')`, (result) => {
+            db.query(`DELETE FROM characters WHERE charString = '${req.body.charString}' AND userId = (SELECT id FROM users WHERE sessionId = '${sessionId}')`, (result) => {
               if(result["success"]) res.status(200);
               else{
                 res.status(500);

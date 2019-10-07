@@ -3,7 +3,7 @@ var db = require("../dbcon.js");
 // Get Money
 exports.getCharMoney = function(req, res){
   const { charString, sessionId } = req.params;
-  db.query(`SELECT copper, silver, electrum, gold, platinum from characters WHERE charString = '${charString}' AND userId = (SELECT id FROM users WHERE sessionId = '${sessionId}')`, (result) => {
+  db.query(`SELECT copper, silver, electrum, gold, platinum from characters WHERE charString = '${charString}'`, (result) => {
     if(result.success){
       res.status(200);
       result.data = result.data[0];

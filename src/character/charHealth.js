@@ -3,9 +3,9 @@ var db = require("../dbcon.js");
 
 // Get Health
 exports.getCharHealth = function(req, res){
-  const { charString, sessionId } = req.params;
+  const { charString } = req.params;
 
-  let sql = `SELECT maxHealth, currentHealth, tempHealth from characters WHERE charString = '${charString}' AND userId = (SELECT id FROM users WHERE sessionId = '${sessionId}')`;
+  let sql = `SELECT maxHealth, currentHealth, tempHealth from characters WHERE charString = '${charString}'`;
   
   db.query(sql, (result) => {
     if(result.success){

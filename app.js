@@ -23,6 +23,7 @@ app.use('/dnd/user', userRouter);
 
 // Import files
 var checkData = require("./src/tests.js").checkData;
+var checkSanitize = require("./src/tests.js").checkSanitize;
 
 var general = require("./src/general.js");
 
@@ -40,11 +41,11 @@ var userGeneral = require("./src/user/userGeneral.js");
 // -----------------------------------------
 //                 General
 // -----------------------------------------
-genRouter.get('/spells', checkData, (req, res) => general.getSpells(req, res));
-genRouter.get('/spells/:offset/:limit/:filter?', checkData, (req, res) => general.getSpellsLimit(req, res));
-genRouter.get('/spellSpec/:id', checkData, (req, res) => general.getSpellSpec(req, res));
-genRouter.get('/alignments', checkData, (req, res) => general.getAlignments(req, res));
-genRouter.get('/backgrounds', checkData, (req, res) => general.getBackgrounds(req, res));
+genRouter.get('/spells', (req, res) => general.getSpells(req, res));
+genRouter.get('/spells/:offset/:limit/:filter?', checkSanitize, (req, res) => general.getSpellsLimit(req, res));
+genRouter.get('/spellSpec/:id', checkSanitize, (req, res) => general.getSpellSpec(req, res));
+genRouter.get('/alignments', (req, res) => general.getAlignments(req, res));
+genRouter.get('/backgrounds', (req, res) => general.getBackgrounds(req, res));
 
 
 // -----------------------------------------
@@ -52,34 +53,34 @@ genRouter.get('/backgrounds', checkData, (req, res) => general.getBackgrounds(re
 // -----------------------------------------
 
 // Character General
-charRouter.get('/general/:sessionId/:charString', checkData, (req, res) => charGen.getCharGeneral(req, res));
-charRouter.patch('/general/:sessionId/:charString', checkData, (req, res) => charGen.patchCharGeneral(req, res));
+charRouter.get('/general/:charString', checkData, (req, res) => charGen.getCharGeneral(req, res));
+charRouter.patch('/general/:charString', checkData, (req, res) => charGen.patchCharGeneral(req, res));
 
 // Character Money
-charRouter.get('/money/:sessionId/:charString', checkData, (req, res) => charMoney.getCharMoney(req, res));
-charRouter.patch('/money/:sessionId/:charString', checkData, (req, res) => charMoney.patchCharMoney(req, res));
+charRouter.get('/money/:charString', checkData, (req, res) => charMoney.getCharMoney(req, res));
+charRouter.patch('/money/:charString', checkData, (req, res) => charMoney.patchCharMoney(req, res));
 
 // Character Health
-charRouter.get('/health/:sessionId/:charString', checkData, (req, res) => charHealth.getCharHealth(req, res));
-charRouter.patch('/health/:sessionId/:charString', checkData, (req, res) => charHealth.patchCharHealth(req, res));
+charRouter.get('/health/:charString', checkData, (req, res) => charHealth.getCharHealth(req, res));
+charRouter.patch('/health/:charString', checkData, (req, res) => charHealth.patchCharHealth(req, res));
 
 // Character Spells
-charRouter.get('/checkSpell/:sessionId/:charString/:spellId', checkData, (req, res) => charSpells.checkCharSpell(req, res));
-charRouter.get('/spells/:sessionId/:charString', checkData, (req, res) => charSpells.getCharSpells(req, res));
-charRouter.get('/spells/:sessionId/:charString/:offset/:limit/:filter?', checkData, (req, res) => charSpells.getCharSpellsLimit(req, res));
-charRouter.post('/spells/:sessionId/:charString', checkData, (req, res) => charSpells.postCharSpell(req, res));
-charRouter.delete('/spells/:sessionId/:charString', checkData, (req, res) => charSpells.delCharSpell(req, res));
+charRouter.get('/checkSpell/:charString/:spellId', checkData, (req, res) => charSpells.checkCharSpell(req, res));
+charRouter.get('/spells/:charString', checkData, (req, res) => charSpells.getCharSpells(req, res));
+charRouter.get('/spells/:charString/:offset/:limit/:filter?', checkData, (req, res) => charSpells.getCharSpellsLimit(req, res));
+charRouter.post('/spells/:charString', checkData, (req, res) => charSpells.postCharSpell(req, res));
+charRouter.delete('/spells/:charString', checkData, (req, res) => charSpells.delCharSpell(req, res));
 
 // Character Notes
-charRouter.get('/notes/:sessionId/:charString', checkData, (req, res) => charNotes.getCharNotes(req, res));
-charRouter.post('/notes/:sessionId/:charString', checkData, (req, res) => charNotes.postCharNotes(req, res));
-charRouter.patch('/notes/:sessionId/:charString', checkData, (req, res) => charNotes.patchCharNotes(req, res));
-charRouter.delete('/notes/:sessionId/:charString', checkData, (req, res) => charNotes.delCharNotes(req, res));
+charRouter.get('/notes/:charString', checkData, (req, res) => charNotes.getCharNotes(req, res));
+charRouter.post('/notes/:charString', checkData, (req, res) => charNotes.postCharNotes(req, res));
+charRouter.patch('/notes/:charString', checkData, (req, res) => charNotes.patchCharNotes(req, res));
+charRouter.delete('/notes/:charString', checkData, (req, res) => charNotes.delCharNotes(req, res));
 
 // Character Trackers
-charRouter.get('/trackers/:sessionId/:charString', checkData, (req, res) => charTrackers.getCharTrackers(req, res));
-charRouter.post('/trackers/:sessionId/:charString', checkData, (req, res) => charTrackers.postCharTracker(req, res));
-charRouter.patch('/trackers/:sessionId/:charString', checkData, (req, res) => charTrackers.patchCharTracker(req, res));
+charRouter.get('/trackers/:charString', checkData, (req, res) => charTrackers.getCharTrackers(req, res));
+charRouter.post('/trackers/:charString', checkData, (req, res) => charTrackers.postCharTracker(req, res));
+charRouter.patch('/trackers/:charString', checkData, (req, res) => charTrackers.patchCharTracker(req, res));
 
 
 // -----------------------------------------
@@ -87,13 +88,13 @@ charRouter.patch('/trackers/:sessionId/:charString', checkData, (req, res) => ch
 // -----------------------------------------
 
 // Login/Register
-userRouter.post('/login', checkData, (req, res) => userGeneral.login(req, res));
-userRouter.post('/register', checkData, (req, res) => userGeneral.register(req, res));
+userRouter.post('/login', checkSanitize, (req, res) => userGeneral.login(req, res));
+userRouter.post('/register', checkSanitize, (req, res) => userGeneral.register(req, res));
 
 // Character Information
-userRouter.get('/charList/:sessionId', checkData, (req, res) => userChars.getCharList(req, res));
-userRouter.post('/character/:sessionId', checkData, (req, res) => userChars.postChar(req, res));
-userRouter.delete('/character/:sessionId', checkData, (req, res) => userChars.delChar(req, res));
+userRouter.get('/charList', checkData, (req, res) => userChars.getCharList(req, res));
+userRouter.post('/character', checkData, (req, res) => userChars.postChar(req, res));
+userRouter.delete('/character', checkData, (req, res) => userChars.delChar(req, res));
 
 
 app.listen(3004, () => {

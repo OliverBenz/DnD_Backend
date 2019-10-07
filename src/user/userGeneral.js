@@ -1,7 +1,10 @@
 var db = require("../dbcon.js");
 var bcrypt = require('bcryptjs');
+var atob = require("atob");
+var btoa = require("btoa");
 
 exports.login = function(req, res){
+  console.log(atob(req.headers.authorization.split(" ")[1]));
   const { email, password } = req.body;
 
   db.query(`SELECT password FROM users WHERE email='${email}'`, (result) => {
@@ -14,8 +17,7 @@ exports.login = function(req, res){
         if(bcrypt.compareSync(password, result.data[0]["password"])){
           db.query(`SELECT sessionId FROM users WHERE email='${email}'`, (result) => {
             res.status(200);
-            result.data = genAuthKey(email, result.data[0]);
-            // result["data"] = result["data"][0];
+            result.data = btoa(`${email}:${result.data[0].sessionId}`);
             res.send(JSON.stringify(result));
           });
         }
@@ -40,7 +42,7 @@ exports.register = function(req, res){
   db.query(`INSERT INTO users VALUES (0, '${firstname}', '${lastname}', '${email}', '${bcrypt.hashSync(password, 14)}', '${sessionId}')`, (result) => {
     if(result.success) {
       res.status(200);
-      result.data = genAuthKey(email, sessionId);
+      result.data = btoa(`${email}:${sessionId}`);
     }
     else{
       res.status(409);
@@ -48,8 +50,4 @@ exports.register = function(req, res){
     }
     res.send(JSON.stringify(result));
   });
-}
-
-genAuthKey = function(email, sessionId){
-  return bcrypt.hashSync(`${email}:${sessionId}`, 12);
 }

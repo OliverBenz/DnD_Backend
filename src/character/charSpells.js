@@ -2,7 +2,7 @@ var db = require("../dbcon.js");
 
 // Get Spells
 exports.getCharSpells = function(req, res){
-  db.query(`SELECT s.id, s.name, s.level, s.range FROM charSpells c INNER JOIN spells s ON c.spellId = s.id WHERE c.characterId = (SELECT id from characters ch WHERE ch.charString = '${req.params.charString}' AND ch.userId = (SELECT id FROM users WHERE sessionId = '${req.params.sessionId}'))`, (result) => {
+  db.query(`SELECT s.id, s.name, s.level, s.range FROM charSpells c INNER JOIN spells s ON c.spellId = s.id WHERE c.characterId = (SELECT id from characters ch WHERE ch.charString = '${req.params.charString}')`, (result) => {
     if(result.success) res.status(200);
     else{
       res.status(500);
@@ -16,7 +16,7 @@ exports.getCharSpells = function(req, res){
 exports.getCharSpellsLimit = function(req, res){
   const { filter, limit, offset, charString, sessionId } = req.params;
 
-  let sql = `SELECT s.id, s.name, s.level, s.range FROM charSpells c INNER JOIN spells s ON c.spellId = s.id WHERE c.characterId = (SELECT id from characters ch WHERE ch.charString = '${charString}' AND ch.userId = (SELECT id FROM users WHERE sessionId = '${sessionId}')) `;
+  let sql = `SELECT s.id, s.name, s.level, s.range FROM charSpells c INNER JOIN spells s ON c.spellId = s.id WHERE c.characterId = (SELECT id from characters ch WHERE ch.charString = '${charString}') `;
   sql += filter ? `AND s.name LIKE '%${filter}%' ` : "";
   sql += `ORDER BY s.name ASC LIMIT ${limit} OFFSET ${offset}`;
 
