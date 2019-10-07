@@ -65,11 +65,11 @@ charRouter.get('/health/:charString', checkData, (req, res) => charHealth.getCha
 charRouter.patch('/health/:charString', checkData, (req, res) => charHealth.patchCharHealth(req, res));
 
 // Character Spells
-charRouter.get('/checkSpell/:charString/:spellId', checkData, (req, res) => charSpells.checkCharSpell(req, res));
+charRouter.get('/checkSpell/:charString/:id', checkData, (req, res) => charSpells.checkCharSpell(req, res));
 charRouter.get('/spells/:charString', checkData, (req, res) => charSpells.getCharSpells(req, res));
 charRouter.get('/spells/:charString/:offset/:limit/:filter?', checkData, (req, res) => charSpells.getCharSpellsLimit(req, res));
-charRouter.post('/spells/:charString', checkData, (req, res) => charSpells.postCharSpell(req, res));
-charRouter.delete('/spells/:charString/:spellId', checkData, (req, res) => charSpells.delCharSpell(req, res));
+charRouter.post('/spells/:charString/:id', checkData, (req, res) => charSpells.postCharSpell(req, res));
+charRouter.delete('/spells/:charString/:id', checkData, (req, res) => charSpells.delCharSpell(req, res));
 
 // Character Notes
 charRouter.get('/notes/:charString', checkData, (req, res) => charNotes.getCharNotes(req, res));
