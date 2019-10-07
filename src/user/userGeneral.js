@@ -4,7 +4,7 @@ var atob = require("atob");
 var btoa = require("btoa");
 
 exports.login = function(req, res){
-  console.log(atob(req.headers.authorization.split(" ")[1]));
+  // console.log(atob(req.headers.authorization.split(" ")[1]));
   const { email, password } = req.body;
 
   db.query(`SELECT password FROM users WHERE email='${email}'`, (result) => {
