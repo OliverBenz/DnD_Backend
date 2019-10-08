@@ -26,9 +26,9 @@ exports.postTracker = function(req, res){
 }
 
 exports.patchTracker = function(req, res){
-  const { trackValue, id } = req.body;
+  const { trackValue, trackTitle, id } = req.body;
 
-  db.query(`UPDATE charTrackers SET value = ${trackValue} WHERE id = ${id} AND charId = (SELECT id FROM characters WHERE charString = '${req.params.charString}')`, (result) => {
+  db.query(`UPDATE charTrackers SET value = ${trackValue}, title = ${trackTitle} WHERE id = ${id} AND charId = (SELECT id FROM characters WHERE charString = '${req.params.charString}')`, (result) => {
     if(result.success) res.status(200);
     else{
       res.status(500);
