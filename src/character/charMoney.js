@@ -1,7 +1,7 @@
 var db = require("../dbcon.js");
 
 // Get Money
-exports.getCharMoney = function(req, res){
+exports.getMoney = function(req, res){
   const { charString, sessionId } = req.params;
   db.query(`SELECT copper, silver, electrum, gold, platinum from characters WHERE charString = '${charString}'`, (result) => {
     if(result.success){
@@ -17,7 +17,7 @@ exports.getCharMoney = function(req, res){
 }
 
 // Update Money
-exports.patchCharMoney = function(req, res){
+exports.patchMoney = function(req, res){
   const { copper, silver, electrum, gold, platinum } = req.body;
 
   let sql = "UPDATE characters SET id=id"

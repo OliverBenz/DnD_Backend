@@ -1,7 +1,7 @@
 var db = require("../dbcon.js");
 
 // Get Spells
-exports.getCharSpells = function(req, res){
+exports.getSpells = function(req, res){
   db.query(`SELECT s.id, s.name, s.level, s.range FROM charSpells c INNER JOIN spells s ON c.spellId = s.id WHERE c.characterId = (SELECT id from characters ch WHERE ch.charString = '${req.params.charString}')`, (result) => {
     if(result.success) res.status(200);
     else{
@@ -13,7 +13,7 @@ exports.getCharSpells = function(req, res){
 }
 
 // Get Spells with Limit and filter
-exports.getCharSpellsLimit = function(req, res){
+exports.getSpellsLimit = function(req, res){
   const { filter, limit, offset, charString, sessionId } = req.params;
 
   let sql = `SELECT s.id, s.name, s.level, s.range FROM charSpells c INNER JOIN spells s ON c.spellId = s.id WHERE c.characterId = (SELECT id from characters ch WHERE ch.charString = '${charString}') `;
@@ -34,7 +34,7 @@ exports.getCharSpellsLimit = function(req, res){
 }
 
 // Add new Spell to Char
-exports.postCharSpell = function(req, res){
+exports.postSpell = function(req, res){
   const { charString, id } = req.params;
 
   db.query(`INSERT INTO charSpells VALUES ((SELECT id FROM characters WHERE charString = '${charString}'), ${id})`, (result) => {
@@ -51,7 +51,7 @@ exports.postCharSpell = function(req, res){
 }
 
 // Delete Spell from Char
-exports.delCharSpell = function(req, res){
+exports.deleteSpell = function(req, res){
   const { charString, id } = req.params;
 
   db.query(`DELETE FROM charSpells WHERE characterId = (SELECT id FROM characters WHERE charString = '${charString}') AND spellId = ${id}`, (result) => {
@@ -68,7 +68,7 @@ exports.delCharSpell = function(req, res){
 }
 
 // Check if Char has Spell
-exports.checkCharSpell = function(req, res){
+exports.checkSpell = function(req, res){
   const { charString, id } = req.params;
 
   db.query(`SELECT * FROM charSpells WHERE characterId = (SELECT id FROM characters WHERE charString = '${charString}') AND spellId = ${id}`, (result) => {

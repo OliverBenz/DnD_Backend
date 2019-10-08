@@ -2,7 +2,7 @@ var connection = require("../dbcon.js").connection;
 var db = require("../dbcon.js");
 
 // Get Health
-exports.getCharHealth = function(req, res){
+exports.getHealth = function(req, res){
   const { charString } = req.params;
 
   let sql = `SELECT maxHealth, currentHealth, tempHealth from characters WHERE charString = '${charString}'`;
@@ -22,7 +22,7 @@ exports.getCharHealth = function(req, res){
 }
 
 // Update Health
-exports.patchCharHealth = function(req, res){
+exports.patchHealth = function(req, res){
   const { maxHealth, currentHealth, tempHealth } = req.body;
 
   let sql = "UPDATE characters SET id=id";

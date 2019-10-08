@@ -1,7 +1,7 @@
 var db = require("../dbcon.js");
 
 // Get General Character Information
-exports.getCharGeneral = function(req, res){
+exports.getGeneral = function(req, res){
   const { charString, sessionId } = req.params;
 
   let sql = `SELECT c.firstname, c.lastname, c.level, c.xp, a.name, c.background, c.age, c.height, weight FROM characters c INNER JOIN alignments a ON a.id = c.alignment WHERE c.charString='${charString}'`;
@@ -21,7 +21,7 @@ exports.getCharGeneral = function(req, res){
 }
 
 // Update General Character Information
-exports.patchCharGeneral = function(req, res){
+exports.patchGeneral = function(req, res){
   db.query(`UPDATE characters SET xp`, (result) => {
     if(err){
       console.log(err);

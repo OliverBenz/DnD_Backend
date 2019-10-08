@@ -48,6 +48,8 @@ exports.postChar = function(req, res){
 }
 
 exports.delChar = function(req, res){
+  // TODO: Delete all char references before deleting the character
+  
   const sessionId = getSessionId(req.headers.authorization);
   // Check password
     db.query(`SELECT password FROM users WHERE sessionId = '${sessionId}'`, (password) => {

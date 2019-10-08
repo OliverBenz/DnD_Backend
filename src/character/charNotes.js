@@ -1,7 +1,7 @@
 var db = require("../dbcon.js");
 
 // Get all Notes
-exports.getCharNotes = function(req, res){
+exports.getNotes = function(req, res){
   db.query(`SELECT id, date, note FROM notes WHERE charId = (SELECT id FROM characters WHERE charString = '${req.params.charString}') ORDER BY date DESC`, (result) => {
     if(result.success) res.status(200);
     else{
@@ -13,7 +13,7 @@ exports.getCharNotes = function(req, res){
 }
 
 // Post new Note
-exports.postCharNotes = function(req, res){
+exports.postNote = function(req, res){
   const { date, note } = req.body;
 
   db.query(`INSERT INTO notes VALUES (0, (SELECT id FROM characters WHERE charString = '${req.params.charString}'), '${date}', '${note}')`, (result) => {
@@ -35,7 +35,7 @@ exports.postCharNotes = function(req, res){
 }
 
 // Update existing Note
-exports.patchCharNotes = function(req, res){
+exports.patchNote = function(req, res){
   const { id, note } = req.body;
 
   db.query(`UPDATE notes SET note='${note}' WHERE id = ${id} AND charId = (SELECT id FROM characters WHERE charString = '${req.params.charString}')`, (result) => {
@@ -49,7 +49,7 @@ exports.patchCharNotes = function(req, res){
 }
 
 // Delete Note
-exports.delCharNotes = function(req, res){
+exports.deleteNote = function(req, res){
   const { id, charString } = req.params;
 
   db.query(`DELETE FROM notes WHERE id = ${id} AND charId = (SELECT id FROM characters WHERE charString = '${charString}')`, (result) => {

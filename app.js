@@ -53,34 +53,35 @@ genRouter.get('/backgrounds', (req, res) => general.getBackgrounds(req, res));
 // -----------------------------------------
 
 // Character General
-charRouter.get('/general/:charString', checkData, (req, res) => charGen.getCharGeneral(req, res));
-charRouter.patch('/general/:charString', checkData, (req, res) => charGen.patchCharGeneral(req, res));
+charRouter.get('/general/:charString', checkData, (req, res) => charGen.getGeneral(req, res));
+charRouter.patch('/general/:charString', checkData, (req, res) => charGen.patchGeneral(req, res));
 
 // Character Money
-charRouter.get('/money/:charString', checkData, (req, res) => charMoney.getCharMoney(req, res));
-charRouter.patch('/money/:charString', checkData, (req, res) => charMoney.patchCharMoney(req, res));
+charRouter.get('/money/:charString', checkData, (req, res) => charMoney.getMoney(req, res));
+charRouter.patch('/money/:charString', checkData, (req, res) => charMoney.patchMoney(req, res));
 
 // Character Health
-charRouter.get('/health/:charString', checkData, (req, res) => charHealth.getCharHealth(req, res));
-charRouter.patch('/health/:charString', checkData, (req, res) => charHealth.patchCharHealth(req, res));
+charRouter.get('/health/:charString', checkData, (req, res) => charHealth.getHealth(req, res));
+charRouter.patch('/health/:charString', checkData, (req, res) => charHealth.patchHealth(req, res));
 
 // Character Spells
-charRouter.get('/checkSpell/:charString/:id', checkData, (req, res) => charSpells.checkCharSpell(req, res));
-charRouter.get('/spells/:charString', checkData, (req, res) => charSpells.getCharSpells(req, res));
-charRouter.get('/spells/:charString/:offset/:limit/:filter?', checkData, (req, res) => charSpells.getCharSpellsLimit(req, res));
-charRouter.post('/spells/:charString/:id', checkData, (req, res) => charSpells.postCharSpell(req, res));
-charRouter.delete('/spells/:charString/:id', checkData, (req, res) => charSpells.delCharSpell(req, res));
+charRouter.get('/checkSpell/:charString/:id', checkData, (req, res) => charSpells.checkSpell(req, res));
+charRouter.get('/spells/:charString', checkData, (req, res) => charSpells.getSpells(req, res));
+charRouter.get('/spells/:charString/:offset/:limit/:filter?', checkData, (req, res) => charSpells.getSpellsLimit(req, res));
+charRouter.post('/spells/:charString/:id', checkData, (req, res) => charSpells.postSpell(req, res));
+charRouter.delete('/spells/:charString/:id', checkData, (req, res) => charSpells.deleteSpell(req, res));
 
 // Character Notes
-charRouter.get('/notes/:charString', checkData, (req, res) => charNotes.getCharNotes(req, res));
-charRouter.post('/notes/:charString', checkData, (req, res) => charNotes.postCharNotes(req, res));
-charRouter.patch('/notes/:charString', checkData, (req, res) => charNotes.patchCharNotes(req, res));
-charRouter.delete('/notes/:charString/:id', checkData, (req, res) => charNotes.delCharNotes(req, res));
+charRouter.get('/notes/:charString', checkData, (req, res) => charNotes.getNotes(req, res));
+charRouter.post('/notes/:charString', checkData, (req, res) => charNotes.postNote(req, res));
+charRouter.patch('/notes/:charString', checkData, (req, res) => charNotes.patchNote(req, res));
+charRouter.delete('/notes/:charString/:id', checkData, (req, res) => charNotes.deleteNote(req, res));
 
 // Character Trackers
-charRouter.get('/trackers/:charString', checkData, (req, res) => charTrackers.getCharTrackers(req, res));
-charRouter.post('/trackers/:charString', checkData, (req, res) => charTrackers.postCharTracker(req, res));
-charRouter.patch('/trackers/:charString', checkData, (req, res) => charTrackers.patchCharTracker(req, res));
+charRouter.get('/trackers/:charString', checkData, (req, res) => charTrackers.getTrackers(req, res));
+charRouter.post('/trackers/:charString', checkData, (req, res) => charTrackers.postTracker(req, res));
+charRouter.patch('/trackers/:charString', checkData, (req, res) => charTrackers.patchTracker(req, res));
+charRouter.delete('/trackers/:charString/:id', checkData, (req, res) => charTrackers.deleteTracker(req, res));
 
 
 // -----------------------------------------
