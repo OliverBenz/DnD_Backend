@@ -62,7 +62,7 @@ exports.delChar = function(req, res){
         else{
           // If password correct
           if(bcrypt.compareSync(req.body.password, password.data[0]["password"])){
-            db.query(`UPDATE characters SET deleted = 1 WHERE charString = '${charString}'`, (result) => {
+            db.query(`UPDATE characters SET deleted = 1 WHERE charString = '${req.params.charString}'`, (result) => {
               if(result["success"]) res.status(200);
               else{
                 res.status(500);
