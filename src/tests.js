@@ -101,7 +101,8 @@ checkSessionId = function(token){
 checkUserChar = function(token, charString){
   const sessionId = atob(token.split(" ")[1]).split(":")[1];
 
-  let sql = `SELECT id FROM characters WHERE charString = '${charString}' AND userId = (SELECT id FROM users WHERE sessionId = '${sessionId}')`;
+  // Also check if char has been deleted
+  let sql = `SELECT id FROM characters WHERE charString = '${charString}' AND userId = (SELECT id FROM users WHERE sessionId = '${sessionId}') AND deleted = 0`;
   
   return new Promise(resolve => {
     db.query(sql, (result) => {

@@ -9,7 +9,8 @@ function getSessionId(token){
 exports.getCharList = function(req, res){
   const sessionId = getSessionId(req.headers.authorization);
 
-  db.query(`SELECT firstname, lastname, level, charString from characters WHERE userId = (SELECT id FROM users WHERE sessionId = '${sessionId}')`, (result) => {
+  // Also check if char has been deleted
+  db.query(`SELECT firstname, lastname, level, charString from characters WHERE userId = (SELECT id FROM users WHERE sessionId = '${sessionId}') AND deleted = 0`, (result) => {
     if(result.success) res.status(200);
     else res.status(500);
     
@@ -49,7 +50,7 @@ exports.postChar = function(req, res){
 
 exports.delChar = function(req, res){
   // TODO: Delete all char references before deleting the character
-  
+
   const sessionId = getSessionId(req.headers.authorization);
   // Check password
     db.query(`SELECT password FROM users WHERE sessionId = '${sessionId}'`, (password) => {
@@ -61,7 +62,7 @@ exports.delChar = function(req, res){
         else{
           // If password correct
           if(bcrypt.compareSync(req.body.password, password.data[0]["password"])){
-            db.query(`DELETE FROM characters WHERE charString = '${req.body.charString}' AND userId = (SELECT id FROM users WHERE sessionId = '${sessionId}')`, (result) => {
+            db.query(`UPDATE characters SET deleted = 1 WHERE charString = '${charString}'`, (result) => {
               if(result["success"]) res.status(200);
               else{
                 res.status(500);
