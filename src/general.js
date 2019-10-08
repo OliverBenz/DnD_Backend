@@ -75,3 +75,27 @@ exports.getSpellSpec = function(req, res){
     res.send(JSON.stringify(result))
   });
 }
+
+// Get Languages
+exports.getLanguages = function(req, res){
+  db.query('SELECT * from languages', (result) => {
+    if(result.success) res.status(200);
+    else{
+      res.status(500);
+      result.message = "Could not get Languages";
+    }
+    res.send(JSON.stringify(result));
+  });
+}
+
+// Get Races
+exports.getRaces = function(req, res){
+  db.query('SELECT * FROM races', (result) => {
+    if(result.success) res.status(200);
+    else{
+      res.status(500);
+      result.message = "Could not get Races";
+    }
+    res.send(JSON.stringify(result));
+  });
+}

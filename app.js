@@ -44,8 +44,11 @@ var userGeneral = require("./src/user/userGeneral.js");
 genRouter.get('/spells', (req, res) => general.getSpells(req, res));
 genRouter.get('/spells/:offset/:limit/:filter?', checkSanitize, (req, res) => general.getSpellsLimit(req, res));
 genRouter.get('/spellSpec/:id', checkSanitize, (req, res) => general.getSpellSpec(req, res));
+
 genRouter.get('/alignments', (req, res) => general.getAlignments(req, res));
 genRouter.get('/backgrounds', (req, res) => general.getBackgrounds(req, res));
+genRouter.get('/languages', (req, res) => general.getLanguages(req, res));
+genRouter.get('/races', (req, res) => general.getRaces(req, res));
 
 
 // -----------------------------------------
