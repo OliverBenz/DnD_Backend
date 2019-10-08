@@ -2,6 +2,9 @@ var express = require('express');
 var bodyParser = require('body-parser');
 var cors = require('cors');
 
+var https = require('https');
+var fs = require('fs');
+
 var app = express();
 app.use(cors());
 app.use(bodyParser.json({ type: 'application/json' }));
@@ -101,6 +104,14 @@ userRouter.post('/character', checkData, (req, res) => userChars.postChar(req, r
 userRouter.delete('/character', checkData, (req, res) => userChars.delChar(req, res));
 
 
-app.listen(3004, () => {
+https.createServer({
+  key: fs.readFileSync('./key.pem'),
+  cert: fs.readFileSync('./cert.pem'),
+  passphrase: '7b4I73zvVScjaeV6Ui72zc4kBUnI&5zwHkzAo&Qux@yXzDc8A6'
+}, app).listen(3004, () => {
   console.log('Listening port 3004');
 });
+
+// app.listen(3004, () => {
+//   console.log('Listening port 3004');
+// });
