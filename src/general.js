@@ -90,7 +90,7 @@ exports.getLanguages = function(req, res){
 
 // Get Races
 exports.getRaces = function(req, res){
-  db.query('SELECT * FROM races', (result) => {
+  db.query('SELECT r.id, r.name, r.speed, r.alignment, s.name as size, r.sizeDesc FROM races r INNER JOIN sizes s on r.size = s.id', (result) => {
     if(result.success) res.status(200);
     else{
       res.status(500);
