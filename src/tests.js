@@ -134,8 +134,10 @@ sanitize = function(data){
       }
       // If INT -> Check if really INT
       else{
-        // If value is not equals to INT of value -> value includes char
-        if(!(data[key] == parseInt(data[key]))) return false;
+        if(! (data[key] === undefined)){
+          // If value is not equals to INT of value -> value includes char
+          if(!(data[key] == parseInt(data[key]))) return false;
+        }
       }
     }
   }
