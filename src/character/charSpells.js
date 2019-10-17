@@ -21,7 +21,7 @@ exports.getSpellCount = function(req, res){
   db.query(url, (result) => {
     if(result.success){
       res.status(200);
-      result.data = result.data[0]["COUNT(id)"];
+      result.data = result.data[0]["COUNT(s.id)"];
     }
     else{
       res.status(500);
