@@ -1,5 +1,5 @@
 {
-  "name": "backendnew",
+  "name": "backend",
   "version": "1.0.0",
   "description": "DND Backend",
   "main": "app.js",
@@ -17,5 +17,13 @@
     "fs": "0.0.1-security",
     "https": "^1.0.0",
     "mysql": "^2.17.1"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/oliverbenz/dndbackend.git"
+  },
+  "bugs": {
+    "url": "https://github.com/oliverbenz/dndbackend/issues"
+  },
+  "homepage": "https://github.com/oliverbenz/dndbackend#readme"
 }

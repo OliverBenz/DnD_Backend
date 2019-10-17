@@ -12,6 +12,17 @@ exports.getSpells = function(req, res){
   });
 }
 
+exports.getSpellCount = function(req, res){
+  db.query(`SELECT COUNT(s.id) FROM charSpells c INNER JOIN spells s ON c.spellId = s.id WHERE c.characterId = (SELECT id from characters ch WHERE ch.charString = '${req.params.charString}')`, (result) => {
+    if(result.success) res.status(200);
+    else{
+      res.status(500);
+      result.message = "Could not get character Spells";
+    }
+    res.send(JSON.stringify(result));
+  });
+}
+
 // Get Spells with Limit and filter
 exports.getSpellsLimit = function(req, res){
   const { filter, limit, offset, charString, sessionId } = req.params;

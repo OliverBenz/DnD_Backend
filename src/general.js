@@ -42,6 +42,18 @@ exports.getSpells = function(req, res){
   });
 }
 
+exports.getSpellCount = function(req, res){
+  db.query("SELECT COUNT(id) from spells", (result) => {
+    if(result.success) res.status(200);
+    else{
+      res.status(500);
+      result.message = "Could not get Spells";
+    }
+
+    res.send(JSON.stringify(result));
+  });
+}
+
 // Get Spells with Limit
 exports.getSpellsLimit = function(req, res){
   const { limit, offset, filter } = req.params;
