@@ -58,7 +58,6 @@ genRouter.get('/races', (req, res) => general.getRaces(req, res));
 // -----------------------------------------
 //                 Character
 // -----------------------------------------
-
 // Character General
 charRouter.get('/general/:charString', checkData, (req, res) => charGen.getGeneral(req, res));
 charRouter.patch('/general/:charString', checkData, (req, res) => charGen.patchGeneral(req, res));
@@ -74,6 +73,7 @@ charRouter.patch('/health/:charString', checkData, (req, res) => charHealth.patc
 // Character Spells
 charRouter.get('/checkSpell/:charString/:id', checkData, (req, res) => charSpells.checkSpell(req, res));
 charRouter.get('/spells/:charString', checkData, (req, res) => charSpells.getSpells(req, res));
+charRouter.get('/spellCount/:charString', checkData, (req, res) => charSpells.getSpellCount(req, res));
 charRouter.get('/spells/:charString/:offset/:limit/:filter?', checkData, (req, res) => charSpells.getSpellsLimit(req, res));
 charRouter.post('/spells/:charString/:id', checkData, (req, res) => charSpells.postSpell(req, res));
 charRouter.delete('/spells/:charString/:id', checkData, (req, res) => charSpells.deleteSpell(req, res));

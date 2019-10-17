@@ -44,7 +44,10 @@ exports.getSpells = function(req, res){
 
 exports.getSpellCount = function(req, res){
   db.query("SELECT COUNT(id) from spells", (result) => {
-    if(result.success) res.status(200);
+    if(result.success) {
+      res.status(200);
+      result.data = result.data[0]["COUNT(id)"];
+    }
     else{
       res.status(500);
       result.message = "Could not get Spells";
