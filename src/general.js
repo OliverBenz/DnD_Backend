@@ -43,7 +43,12 @@ exports.getSpells = function(req, res){
 }
 
 exports.getSpellCount = function(req, res){
-  db.query("SELECT COUNT(id) from spells", (result) => {
+  const { filter } = req.params;
+
+  let sql = 'SELECT COUNT(id) from spells';
+  sql += filter ? ` WHERE name LIKE '%${filter}%'` : "";
+
+  db.query(sql, (result) => {
     if(result.success) {
       res.status(200);
       result.data = result.data[0]["COUNT(id)"];

@@ -45,8 +45,8 @@ var userGeneral = require("./src/user/userGeneral.js");
 //                 General
 // -----------------------------------------
 genRouter.get('/spells', (req, res) => general.getSpells(req, res));
-genRouter.get('/spellCount', (req, res) => general.getSpellCount(req, res));
 genRouter.get('/spells/:offset/:limit/:filter?', checkSanitize, (req, res) => general.getSpellsLimit(req, res));
+genRouter.get('/spellCount/:filter?', (req, res) => general.getSpellCount(req, res));
 genRouter.get('/spellSpec/:id', checkSanitize, (req, res) => general.getSpellSpec(req, res));
 
 genRouter.get('/alignments', (req, res) => general.getAlignments(req, res));
@@ -73,7 +73,7 @@ charRouter.patch('/health/:charString', checkData, (req, res) => charHealth.patc
 // Character Spells
 charRouter.get('/checkSpell/:charString/:id', checkData, (req, res) => charSpells.checkSpell(req, res));
 charRouter.get('/spells/:charString', checkData, (req, res) => charSpells.getSpells(req, res));
-charRouter.get('/spellCount/:charString', checkData, (req, res) => charSpells.getSpellCount(req, res));
+charRouter.get('/spellCount/:charString/:filter?', checkData, (req, res) => charSpells.getSpellCount(req, res));
 charRouter.get('/spells/:charString/:offset/:limit/:filter?', checkData, (req, res) => charSpells.getSpellsLimit(req, res));
 charRouter.post('/spells/:charString/:id', checkData, (req, res) => charSpells.postSpell(req, res));
 charRouter.delete('/spells/:charString/:id', checkData, (req, res) => charSpells.deleteSpell(req, res));

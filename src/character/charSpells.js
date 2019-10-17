@@ -13,7 +13,12 @@ exports.getSpells = function(req, res){
 }
 
 exports.getSpellCount = function(req, res){
-  db.query(`SELECT COUNT(s.id) FROM charSpells c INNER JOIN spells s ON c.spellId = s.id WHERE c.characterId = (SELECT id from characters ch WHERE ch.charString = '${req.params.charString}')`, (result) => {
+  const { filter } = req.params;
+  
+  let url = `SELECT COUNT(s.id) FROM charSpells c INNER JOIN spells s ON c.spellId = s.id WHERE c.characterId = (SELECT id from characters ch WHERE ch.charString = '${req.params.charString}')`;
+  url += filter ? ` AND s.name LIKE '%${filter}%'` : '';
+
+  db.query(url, (result) => {
     if(result.success){
       res.status(200);
       result.data = result.data[0]["COUNT(id)"];
