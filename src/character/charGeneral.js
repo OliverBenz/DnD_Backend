@@ -4,7 +4,7 @@ var db = require("../dbcon.js");
 exports.getGeneral = function(req, res){
   const { charString, sessionId } = req.params;
 
-  let sql = `SELECT c.firstname, c.lastname, c.level, c.xp, a.name, c.background, c.age, c.height, weight FROM characters c INNER JOIN alignments a ON a.id = c.alignment WHERE c.charString='${charString}'`;
+  let sql = `SELECT c.firstname, c.lastname, c.level, c.xp, a.name as background, c.age, c.height, weight FROM characters c INNER JOIN alignments a ON a.id = c.alignment WHERE c.charString='${charString}'`;
   
   db.query(sql, (result) => {
     if(result.success){
