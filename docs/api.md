@@ -7,36 +7,36 @@ Every url precedes with `http://<ip>/dnd/`, appended by:
 This URL extension contains multiple public calls that can be used without a sessionID or characterID. 
 
 ### `/spells/` 
-Returns a list of all spells in the database. 
+(Get) a list of all spells in the database. 
 
 ### `/spells/:offset/:limit/:filter?`
-Returns a list of all spells with following parameters:
+(Get) a list of all spells with following parameters:
 - offset: Spell ID with which to begin
 - limit:  Amount of spells to return
 - filter: String to filter the spells by name (optional)
 
 ### `/spellCount/:filter?`
-Returns the number of spells in the database with following parameters:
+(Get) the number of spells in the database with following parameters:
 - filter: String to filter the spells by name (optional)
 
 ### `/spellSpec/:id`
-Returns more specific information about a spell. 
+(Get) more specific information about a spell. 
 - id:  Id of the spell
 
 ### `/alignments`
-Returns a list with all alignments.
+(Get) a list with all alignments.
 
 ### `/backgrounds`
-Returns a list with all backgrounds.
+(Get) a list with all backgrounds.
 
 ### `/races`
-Returns a list with all races.
+(Get) a list with all races.
 
 ### `/languages`
-Returns a list with all languages. 
+(Get) a list with all languages. 
 
 ### Example URL
-`http://<ip>/dnd/general/spells/0/50/"eldritch"`
+`http://<ip>/dnd/general/spells/0/50/"eldritch"` <br />
 Returns the first 50(or less) spells that contain the string "eldritch"
 
 <br />
@@ -73,7 +73,7 @@ This URL extension contains multiple calls that can only be accessed with a vali
 - charString: Unique identifier of the character
 
 ### `/spells/:charString/:offset/:limit/:filter?`
-Returns a list of spells the character knows with following parameters:
+(Get) a list of spells the character knows with following parameters:
 - charString: Unique identifier of the character
 - offset:     spellId with which to begin
 - limit:      Amount of spells to return
@@ -98,7 +98,7 @@ Returns a list of spells the character knows with following parameters:
 - trackerId:  Unique identifier of the tracker
 
 ### Example URL
-`http://<ip>/dnd/character/spells/<charString>/0/50/"Eldritch"`
+`http://<ip>/dnd/character/spells/<charString>/0/50/"Eldritch"` <br />
 Returns the first 50(or less) spells of the character that contain the string "eldritch"
 
 <br />
@@ -120,5 +120,5 @@ This URL extension contains multiple calls that can only be accessed with a vali
 (Post / Delete) a new character to the users character list. The sessionId has to be sent in the http header. 
 
 ### Example URL
-`http://<ip>/dnd/user/login`
+`http://<ip>/dnd/user/login` <br />
 Send the login data in the http body and receive the sessionId as a result.
