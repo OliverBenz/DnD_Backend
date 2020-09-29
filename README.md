@@ -12,7 +12,7 @@ It was originally created as a Note-Tracking System to resolve players of keepin
 When a user registers with the backend, a new and unique sessionId is created, which is then sent to the user. <br />
 The user has to then attach the sessionId (in the header) to every request it makes in order to access sensitive content. <br />
 
-Data sinitization and general security loopholes should be a focus of anyone wanting to actively use this backend since my personal experience doesn't lie in this field.
+Data sanitization and general security loopholes should be a focus of anyone wanting to actively use this backend since my personal experience doesn't lie in this field.
 
 
 ## Additional Information
